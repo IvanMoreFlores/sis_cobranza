@@ -1,0 +1,88 @@
+<app-navbar></app-navbar>
+<div class="container main-container">
+    <section class="content animated fadeIn fast">
+        <div class="card content animated fadeIn">
+            <div class="card-header bg-primary text-white">
+                <h4>Busqueda de usuario</h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Usuario</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp" placeholder="Busqueda por usuario">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Código</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1"
+                                    aria-describedby="emailHelp" placeholder="Busqueda por código">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Estado</label>
+                                <select class="form-control">
+                                    <option>.: TODOS :.</option>
+                                    <option>ACTIVO</option>
+                                    <option>INACTIVO</option>
+                                </select>
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <a href="#" class="btn btn-primary btn-block">Nuevo usuario</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <a href="#" class="btn btn-danger btn-block">Descargar PDF</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <a href="#" class="btn btn-success btn-block">Descargar EXCEL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card content animated fadeIn" style="margin-top: 20px">
+            <div class="card-header bg-primary text-white">
+                <h4>Listado de usuario</h4>
+            </div>
+            <div class="card-body">
+                <table id="tabla_usuarios" datatable class="table table-bordered table-condensed table-hover responsive"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="5%">Nº</th>
+                            <th class="text-center" width="15%">Nº Documento</th>
+                            <th class="text-center" width="15%">Datos Personales</th>
+                            <th class="text-center" width="15%">Usuario</th>
+                            <th class="text-center" width="8%">Rol</th>
+                            <th class="text-center" width="8%">Estado</th>
+                            <th class="text-center" width="8%">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+<app-footer></app-footer>
