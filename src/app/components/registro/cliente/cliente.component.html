@@ -1,5 +1,330 @@
 <app-navbar></app-navbar>
 <div class="container main-container">
-    <p>cliente works!</p>
+    <section class="content animated fadeIn fast">
+        <div class="card content animated fadeIn">
+            <div class="card-header bg-primary text-white">
+                <h4>Busqueda de cliente</h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Usuario</label>
+                                <input (keyup)="buscarUser($event)" type="text" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Busqueda por usuario">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Código</label>
+                                <input (keyup)="buscarCodigo($event)" type="text" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Busqueda por código">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Estado</label>
+                                <select (change)="buscarEstado($event)" class="form-control">
+                                    <option value="">.: TODOS :.</option>
+                                    <option value="1">ACTIVO</option>
+                                    <option value="2">INACTIVO</option>
+                                </select>
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
+                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo cliente</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button id="btn_pdf" class="btn btn-danger btn-block">Descargar PDF</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card content animated fadeIn" style="margin-top: 20px">
+            <div class="card-header bg-primary text-white">
+                <h4>Listado de cliente</h4>
+            </div>
+            <div class="card-body">
+                <table datatable [dtOptions]="dtOptions" id="tabla_usuarios" datatable
+                    class="table table-bordered table-condensed table-hover responsive" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="5%">Nº</th>
+                            <th class="text-center" width="10%">Código</th>
+                            <th class="text-center" width="10%">Nº Documento</th>
+                            <th class="text-center" width="25%">Datos Personales</th>
+                            <th class="text-center" width="10%">Usuario</th>
+                            <th class="text-center" width="8%">Rol</th>
+                            <th class="text-center" width="8%">Estado</th>
+                            <th class="text-center" width="8%">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr *ngFor="let usuario of usuarios; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ usuario.codigo }}</td>
+                            <td>{{ usuario.numero_doc }}</td>
+                            <td>{{ usuario.nombre }}</td>
+                            <td>{{ usuario.user }}</td>
+                            <td>{{ usuario.rol }}</td>
+                            <td>
+                                <div class="form-group">
+                                    <span *ngIf="usuario.id_estado === '1'"
+                                        class="badge badge-primary">{{ usuario.estado }}</span>
+                                    <span *ngIf="usuario.id_estado === '2'"
+                                        class="badge badge-danger">{{ usuario.estado }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button (click)="btnEditar(usuario.id_usuario)" class="btn"><i
+                                            class="fa fa-edit fa-2x"></i>
+                                    </button>
+                                    <button (click)="btnEliminar(usuario.id_usuario)" class="btn"><i
+                                            class="fa fa-trash fa-2x"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <form [formGroup]="formularioUsuario">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h4 class="modal-title text-center text-white">{{ cabecera }}</h4>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="row" align="center">
+                            <div class="col-md-12" align="center">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Código</label>
+                                            <div class="col-md-12">
+                                                <input readonly fullWidth style="text-transform: uppercase"
+                                                    placeholder="" required class="form-control"
+                                                    formControlName="codigo" [value]="codigo" type="text"> <span
+                                                    class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Rol</label>
+                                            <div class="col-md-12">
+                                                <select style="height:35px;" required fullWidth
+                                                    placeholder=".: SELECCIONE :." formControlName="id_rol"
+                                                    class="form-control">
+                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
+                                                    <option *ngFor="let rol of roles" [value]="rol.id_rol">{{rol.rol}}
+                                                    </option>
+                                                </select> <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-12">Tipo de
+                                                documento</label>
+                                            <div class="col-md-12">
+                                                <select style="height:35px;" required fullWidth
+                                                    placeholder=".: SELECCIONE :." formControlName="id_documento"
+                                                    class="form-control">
+                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
+                                                    <option *ngFor="let documento of documentos"
+                                                        [value]="documento.id_documento">{{documento.documento}}
+                                                    </option>
+                                                </select> <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-12">Numero de
+                                                documento</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="numero_doc"
+                                                    type="text"> <span class="help-block">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('numero_doc').errors && formularioUsuario.get('numero_doc').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('numero_doc').hasError('required')">
+                                                            Se requiere Numero de documento
+                                                        </div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('numero_doc').hasError('pattern')">
+                                                            Solo numeros, entre 8 a 12 digitos
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-12">Sexo</label>
+                                            <div class="col-md-12">
+                                                <select style="height:35px;" required fullWidth fullWidth
+                                                    placeholder=".: SELECCIONE :." formControlName="id_sexo"
+                                                    class="form-control">
+                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
+                                                    <option *ngFor="let sexo of sexos" [value]="sexo.id_sexo">
+                                                        {{sexo.sexo}}
+                                                    </option>
+                                                </select> <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Nombres</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="nombres" type="text">
+                                                <span class="help-block">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('nombres').errors && formularioUsuario.get('nombres').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('nombres').hasError('required')">
+                                                            Se requiere Nombres</div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('nombres').hasError('pattern')">
+                                                            Solo letras
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Apellido
+                                                paterno</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="apellido_pat"
+                                                    type="text">
+                                                <span class="help-block">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('apellido_pat').errors && formularioUsuario.get('apellido_pat').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('apellido_pat').hasError('required')">
+                                                            Se requiere Apellido paterno
+                                                        </div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('apellido_pat').hasError('pattern')">
+                                                            Solo letras
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Apellido
+                                                materno</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="apellido_mat"
+                                                    type="text">
+                                                <span class="help-block">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('apellido_mat').errors && formularioUsuario.get('apellido_mat').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('apellido_mat').hasError('required')">
+                                                            Se requiere Apellido materno
+                                                        </div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('apellido_mat').hasError('pattern')">
+                                                            Solo letras
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Usuario</label>
+                                            <div class="col-md-12">
+                                                <input class="form-control" style="text-transform: uppercase"
+                                                    (focus)="obtenerUser()" required readonly type="text" fullWidth
+                                                    formControlName="user" placeholder="">
+                                                <span class="help-block">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%"
+                                                class="control-label col-md-12">Contraseña</label>
+                                            <div class="col-md-12">
+                                                <input class="form-control" required type="password" nbInput fullWidth
+                                                    formControlName="password" placeholder="">
+                                                <span class="help-block">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
+                        <button *ngIf="!estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
+                            (click)="agregarUser()" type="button" class="btn btn-success">REGISTRAR</button>
+                        <button *ngIf="estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
+                            (click)="actualizar(id)" type="button" class="btn btn-success">ACTUALIZAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <app-footer></app-footer>

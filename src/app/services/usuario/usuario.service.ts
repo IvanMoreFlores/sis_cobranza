@@ -10,12 +10,15 @@ export class UsuarioService {
 
   datos: any;
   // ip = 'http://172.25.13.91/API_SENAMHI/App_movil/';
-  ip = 'http://172.25.13.91/API_SENAMHI/App_movil/';
+  ip = 'http://172.25.13.91/API_COBRANZA/c_registro/';
   apigetUser: string = this.ip + 'getUser';
-  // tslint:disable-next-line: variable-name
-  // api_login: string = this.ip + 'getLogin';
-  // tslint:disable-next-line: variable-name
-  // api_recover_pass: string = this.ip + 'recoverPass';
+  apigetRol: string = this.ip + 'getRol';
+  apigetDocumento: string = this.ip + 'getDocumento';
+  apigetSexo: string = this.ip + 'getSexo';
+  apigetCodigoUser: string = this.ip + 'getCodigoUser';
+  apicreateUser: string = this.ip + 'createUser';
+  apigetUserUpdate: string = this.ip + 'UserUpdate';
+  apigetUserDelete: string = this.ip + 'UserDelete';
   constructor(public http: HttpClient) { }
 
   getUser(): Observable<any> {
@@ -30,28 +33,88 @@ export class UsuarioService {
       .pipe(map(results => results));
   }
 
-  // login(dato: any): Observable<any> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/x-www-form-urlencoded',
-  //       Accept: 'application/json',
-  //     }),
-  //   };
-  //   return this.http
-  //     .post(this.api_login, dato, httpOptions)
-  //     .pipe(map(results => results));
-  // }
+  UserUpdate(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetUserUpdate, dato, httpOptions)
+      .pipe(map(results => results));
+  }
 
-  // recoverPass(dato: any): Observable<any> {
-  //   const httpOptions = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/x-www-form-urlencoded',
-  //       Accept: 'application/json',
-  //     }),
-  //   };
-  //   return this.http
-  //     .post(this.api_recover_pass, dato, httpOptions)
-  //     .pipe(map(results => results));
-  // }
+  UserDelete(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetUserDelete, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+
+  getRol(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .get(this.apigetRol, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getDocumento(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .get(this.apigetDocumento, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getSexo(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .get(this.apigetSexo, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getCodigoUser(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .get(this.apigetCodigoUser, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  createUser(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apicreateUser, dato, httpOptions)
+      .pipe(map(results => results));
+  }
 }
-

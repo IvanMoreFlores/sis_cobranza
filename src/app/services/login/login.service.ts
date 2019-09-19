@@ -12,6 +12,8 @@ export class LoginService {
   // ip = 'http://172.25.13.91/API_SENAMHI/App_movil/';
   ip = 'http://172.25.13.91/API_COBRANZA/c_login/';
   apiLogin: string = this.ip + 'Login';
+  apigetUser: string = this.ip + 'getUser';
+  apigetUserUpdate: string = this.ip + 'UserUpdate';
   constructor(public http: HttpClient) { }
 
   Login(dato: any): Observable<any> {
@@ -26,4 +28,27 @@ export class LoginService {
       .pipe(map(results => results));
   }
 
+  getUser(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetUser, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  UserUpdate(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetUserUpdate, dato, httpOptions)
+      .pipe(map(results => results));
+  }
 }

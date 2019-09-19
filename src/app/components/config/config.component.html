@@ -1,0 +1,33 @@
+<app-navbar></app-navbar>
+<div class="container main-container">
+  <div>
+    <div class="container">
+      <div class="form-group">
+        <label>Usuario</label>
+        <input readonly type="text" class="form-control" [value]="usuario?.user" id="user">
+      </div>
+      <div class="form-group">
+        <label>Nombres</label>
+        <input readonly type="text" class="form-control" [value]="usuario?.nombres" id="namber">
+      </div>
+      <div class="form-group">
+        <label>Apellido paterno</label>
+        <input readonly type="text" class="form-control" [value]="usuario?.apellido_pat" id="apllepat">
+      </div>
+      <div class="form-group">
+        <label>Apellido materno</label>
+        <input readonly type="text" class="form-control" [value]="usuario?.apellido_mat" id="apllemat">
+      </div>
+      <div class="form-group">
+        <label>Nueva contraseña</label>
+        <input [(ngModel)]="contra" type="password" class="form-control" id="contra">
+      </div>
+      <div class="form-group">
+        <label>Confirmar contraseña</label>
+        <input [(ngModel)]="cofircontra" type="password" class="form-control" id="confcontra">
+      </div>
+      <button type="submit" class="btn btn-primary" (click)="btnUpdate()">Acualizar</button>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
