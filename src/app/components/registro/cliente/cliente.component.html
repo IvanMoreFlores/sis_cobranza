@@ -74,6 +74,7 @@
                         <tr>
                             <th class="text-center" width="5%">Nº</th>
                             <th class="text-center" width="10%">Código</th>
+                            <th class="text-center" width="10%">Puesto</th>
                             <th class="text-center" width="10%">Nº Documento</th>
                             <th class="text-center" width="25%">Datos Personales</th>
                             <th class="text-center" width="10%">Usuario</th>
@@ -86,6 +87,7 @@
                         <tr *ngFor="let usuario of usuarios; let i = index">
                             <td>{{ i+1 }}</td>
                             <td>{{ usuario.codigo }}</td>
+                            <td>{{ usuario.puesto }}</td>
                             <td>{{ usuario.numero_doc }}</td>
                             <td>{{ usuario.nombre }}</td>
                             <td>{{ usuario.user }}</td>
@@ -133,6 +135,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Código</label>
                                             <div class="col-md-12">
+                                                <input type="hidden" formControlName="id_usuario">
                                                 <input readonly fullWidth style="text-transform: uppercase"
                                                     placeholder="" required class="form-control"
                                                     formControlName="codigo" [value]="codigo" type="text"> <span
@@ -144,16 +147,26 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Rol</label>
                                             <div class="col-md-12">
-                                                <select style="height:35px;" required fullWidth
-                                                    placeholder=".: SELECCIONE :." formControlName="id_rol"
-                                                    class="form-control">
-                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
-                                                    <option *ngFor="let rol of roles" [value]="rol.id_rol">{{rol.rol}}
-                                                    </option>
-                                                </select> <span class="help-block"></span>
+                                                <input readonly fullWidth style="text-transform: uppercase"
+                                                    placeholder="" required class="form-control"
+                                                    formControlName="id_rol" type="text" value="SOCIO">
+                                                <span class="help-block"></span>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Puesto</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="puesto" type="text">
+                                                <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-12">Tipo de
@@ -170,8 +183,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-12">Numero de
@@ -211,6 +222,10 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+
+                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
@@ -232,12 +247,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Apellido
+                                            <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
                                                 <input fullWidth style="text-transform: uppercase" placeholder=""
@@ -261,7 +273,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Apellido
+                                            <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
                                                 <input fullWidth style="text-transform: uppercase" placeholder=""
@@ -283,6 +295,10 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Usuario</label>
@@ -295,9 +311,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4"></div>
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label style="width: 100%"
@@ -310,7 +324,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4"></div>
+                                    <div class="col-md-2"></div>
                                 </div>
                             </div>
                         </div>

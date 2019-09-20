@@ -31,6 +31,8 @@ export class ClienteComponent implements OnInit {
     this.formularioUsuario = this.fb.group({
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
+      puesto: ['', [Validators.required]],
+      id_usuario: ['', []],
       id_documento: ['', [Validators.required]],
       numero_doc: ['', [Validators.required, Validators.pattern(/^[1-9]\d{7,12}$/)]],
       id_sexo: ['', [Validators.required]],
@@ -97,6 +99,7 @@ export class ClienteComponent implements OnInit {
 
 
   btnAgregar() {
+    this.formularioUsuario.controls.id_rol.setValue('SOCIO');
     this.estado = false;
     this.getRol();
     this.getDocumento();
@@ -114,42 +117,55 @@ export class ClienteComponent implements OnInit {
     });
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
-    this.userServ.createCliente(this.formularioUsuario.value).subscribe((data) => {
-      Swal.close();
-      console.log(data);
-      if (data === true) {
-        this.listarUser();
-        $('#myModal').modal('hide');
-        Swal.fire(
-          'Registrado',
-          'Se registro correctamente el cliente',
-          'success'
-        );
-        console.log('true');
-      } else {
-        Swal.fire({
-          type: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al registrarlo',
+    this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
+      if (data.lentgh > 0) {
+        this.userServ.createCliente(this.formularioUsuario.value).subscribe((data) => {
+          Swal.close();
+          console.log(data);
+          if (data === true) {
+            this.listarUser();
+            $('#myModal').modal('hide');
+            Swal.fire(
+              'Registrado',
+              'Se registro correctamente el cliente',
+              'success'
+            );
+            console.log('true');
+          } else {
+            Swal.fire({
+              type: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al registrarlo',
+            });
+            console.log('false');
+          }
         });
-        console.log('false');
+      } else {
+        Swal.close();
+        Swal.fire({
+          type: 'warning',
+          title: 'Error',
+          text: 'USER YA REGISTRADO',
+        });
       }
-    });
+    }));
   }
 
   async btnEditar(id) {
+    console.log(id);
     this.id = id;
     this.estado = true;
-    await this.getRol();
+    this.formularioUsuario.controls.id_rol.setValue('SOCIO');
     await this.getDocumento();
     await this.getSexo();
     this.cabecera = 'EDITAR CLIENTE #' + id;
     $('#myModal').modal('show');
-    await this.loginServ.getUser({ id }).subscribe((data => {
+    await this.loginServ.getCliente({ id }).subscribe((data => {
       console.log(data);
       const user = data[0];
+      this.formularioUsuario.controls.id_usuario.setValue(user.id_usuario);
       this.formularioUsuario.controls.codigo.setValue(user.codigo);
-      this.formularioUsuario.controls.id_rol.setValue(user.id_rol);
+      this.formularioUsuario.controls.puesto.setValue(user.puesto);
       this.formularioUsuario.controls.id_documento.setValue(user.id_documento);
       this.formularioUsuario.controls.numero_doc.setValue(user.numero_doc);
       this.formularioUsuario.controls.id_sexo.setValue(user.id_sexo);

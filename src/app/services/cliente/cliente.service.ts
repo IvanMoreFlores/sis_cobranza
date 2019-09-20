@@ -18,8 +18,8 @@ export class ClienteService {
   apigetSexo: string = this.ip + 'getSexo';
   apigetCodigoCliente: string = this.ip + 'getCodigoCliente';
   apicreateCliente: string = this.ip + 'createCliente';
-  apigetClienteUpdate: string = this.ip + 'ClienteUpdate';
-  apigetClienteDelete: string = this.ip + 'ClienteDelete';
+  apigetClienteUpdate: string = this.ip + 'clienteUpdate';
+  apigetClienteDelete: string = this.ip + 'clienteDelete';
   constructor(public http: HttpClient) { }
 
   getCliente(): Observable<any> {

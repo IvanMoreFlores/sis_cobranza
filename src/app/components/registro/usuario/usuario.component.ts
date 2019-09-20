@@ -114,27 +114,41 @@ export class UsuarioComponent implements OnInit {
     });
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
-    this.userServ.createUser(this.formularioUsuario.value).subscribe((data) => {
-      Swal.close();
-      console.log(data);
-      if (data === true) {
-        this.listarUser();
-        $('#myModal').modal('hide');
-        Swal.fire(
-          'Registrado',
-          'Se registro correctamente el usuario',
-          'success'
-        );
-        console.log('true');
-      } else {
-        Swal.fire({
-          type: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al registrarlo',
+
+    this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
+      if (data.lentgh > 0) {
+        this.userServ.createUser(this.formularioUsuario.value).subscribe((data) => {
+          Swal.close();
+          console.log(data);
+          if (data === true) {
+            this.listarUser();
+            $('#myModal').modal('hide');
+            Swal.fire(
+              'Registrado',
+              'Se registro correctamente el usuario',
+              'success'
+            );
+            console.log('true');
+          } else {
+            Swal.fire({
+              type: 'warning',
+              title: 'Error',
+              text: 'Hubo un problema al registrarlo',
+            });
+            console.log('false');
+          }
         });
-        console.log('false');
+      } else {
+        Swal.close();
+        Swal.fire({
+          type: 'warning',
+          title: 'Error',
+          text: 'USER YA REGISTRADO',
+        });
       }
-    });
+    }));
+
+
   }
 
   async btnEditar(id) {

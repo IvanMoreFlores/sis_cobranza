@@ -1,5 +1,228 @@
 <app-navbar></app-navbar>
 <div class="container main-container">
-    <p>servicio works!</p>
+    <section class="content animated fadeIn fast">
+        <div class="card content animated fadeIn">
+            <div class="card-header bg-primary text-white">
+                <h4>Busqueda de servicio</h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Servicio</label>
+                                <input (keyup)="buscarServicio($event)" type="text" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Busqueda por usuario">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Código</label>
+                                <input (keyup)="buscarCodigo($event)" type="text" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp"
+                                    placeholder="Busqueda por código">
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Estado</label>
+                                <select (change)="buscarEstado($event)" class="form-control">
+                                    <option value="">.: TODOS :.</option>
+                                    <option value="1">ACTIVO</option>
+                                    <option value="2">INACTIVO</option>
+                                </select>
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                                    else.</small> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
+                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo servicio</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button id="btn_pdf" class="btn btn-danger btn-block">Descargar PDF</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <button id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card content animated fadeIn" style="margin-top: 20px">
+            <div class="card-header bg-primary text-white">
+                <h4>Listado de servicio</h4>
+            </div>
+            <div class="card-body">
+                <table datatable [dtOptions]="dtOptions" id="tabla_usuarios" datatable
+                    class="table table-bordered table-condensed table-hover responsive" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="5%">Nº</th>
+                            <th class="text-center" width="10%">Código</th>
+                            <th class="text-center" width="10%">Servicio</th>
+                            <th class="text-center" width="25%">Descripción</th>
+                            <th class="text-center" width="10%">Periodo</th>
+                            <th class="text-center" width="8%">Monto</th>
+                            <th class="text-center" width="8%">Estado</th>
+                            <th class="text-center" width="8%">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr *ngFor="let servicio of servicios; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ servicio.codigo }}</td>
+                            <td>{{ servicio.nombre }}</td>
+                            <td>{{ servicio.descripcion }}</td>
+                            <td>{{ servicio.periodo }}</td>
+                            <td>S/. {{ servicio.monto }}</td>
+                            <td>
+                                <div class="form-group">
+                                    <span *ngIf="servicio.id_estado === '1'"
+                                        class="badge badge-primary">{{ servicio.estado }}</span>
+                                    <span *ngIf="servicio.id_estado === '2'"
+                                        class="badge badge-danger">{{ servicio.estado }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button (click)="btnEditar(servicio.id_servicio)" class="btn"><i
+                                            class="fa fa-edit fa-2x"></i>
+                                    </button>
+                                    <button (click)="btnEliminar(servicio.id_servicio)" class="btn"><i
+                                            class="fa fa-trash fa-2x"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <form [formGroup]="formularioUsuario">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h4 class="modal-title text-center text-white">{{ cabecera }}</h4>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span class="text-white" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="row" align="center">
+                            <div class="col-md-12" align="center">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Código</label>
+                                            <div class="col-md-12">
+                                                <input type="hidden" formControlName="id_servicio">
+                                                <input readonly fullWidth style="text-transform: uppercase"
+                                                    placeholder="" required class="form-control"
+                                                    formControlName="codigo" [value]="codigo" type="text"> <span
+                                                    class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Servicio</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="nombre"
+                                                    type="text"> <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label style="width: 100%"
+                                                class="control-label col-md-6">Descripción</label>
+                                            <div class="col-md-12">
+                                                <textarea fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="descripcion"
+                                                    type="text"> <span
+                                                    class="help-block"></span>
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Periodo</label>
+                                            <div class="col-md-12">
+                                                <select style="height:35px;" required fullWidth
+                                                    placeholder=".: SELECCIONE :." formControlName="id_periodo"
+                                                    class="form-control">
+                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
+                                                    <option value="1">SEMANAL</option>
+                                                    <option value="2">QUINCENAL</option>
+                                                    <option value="3">MENSUAL</option>
+                                                </select> <span class="help-block"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="width: 100%" class="control-label col-md-6">Monto</label>
+                                            <div class="col-md-12">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    required class="form-control" formControlName="monto" type="text">
+                                                <span class="help-block"></span>
+                                                <div
+                                                    *ngIf="formularioUsuario.get('monto').errors && formularioUsuario.get('monto').dirty">
+                                                    <div style="color: red !important" position="stacked" ion-text
+                                                        *ngIf="formularioUsuario.get('monto').hasError('required')">
+                                                        Se requiere Numero de documento
+                                                    </div>
+                                                    <div style="color: red !important" position="stacked" ion-text
+                                                        *ngIf="formularioUsuario.get('monto').hasError('pattern')">
+                                                        Solo numeros
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
+                        <button *ngIf="!estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
+                            (click)="agregarServicio()" type="button" class="btn btn-success">REGISTRAR</button>
+                        <button *ngIf="estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
+                            (click)="actualizar()" type="button" class="btn btn-success">ACTUALIZAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 <app-footer></app-footer>
