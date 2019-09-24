@@ -116,7 +116,7 @@ export class UsuarioComponent implements OnInit {
     // console.log(this.formularioUsuario.value);
 
     this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
-      if (data.lentgh > 0) {
+      if (data[0]['total'] === "0") {
         this.userServ.createUser(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();
           console.log(data);
