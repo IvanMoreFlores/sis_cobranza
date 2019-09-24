@@ -1,4 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
+.ui-autocomplete {
+  list-style: none;
+  background-color: gainsboro;
+  width: 80px;
+  padding-left: 10px;
+}
+
+.ui-autocomplete {
+  width: 80px;
+  position: absolute;
+  z-index: 99999 !important;
+  cursor: default;
+  padding: 0;
+  margin-top: 2px;
+  list-style: none;
+  background-color: gainsboro;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ui-autocomplete > li {
+  padding: 3px 20px;
+}
+
+.ui-autocomplete > li.ui-state-focus {
+  background-color: #ddd;
+}
+
+.ui-helper-hidden-accessible {
+  display: none;
+}
+
+.autocomplete {
+  z-index: 1051;
+}
+
 .main-container {
   margin-top: 100px;
   margin-bottom: 60px;
@@ -14,7 +55,7 @@
 }
 
 .navbar {
-  position: absolute !important;
+  position: fixed !important;
   left: 0;
   top: 0;
   width: 100% !important;

@@ -19,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfigComponent } from './components/config/config.component';
+import { CrearComponent } from './components/convenio/crear/crear.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ConfigComponent } from './components/config/config.component';
     ServicioComponent,
     FooterComponent,
     LoginComponent,
-    ConfigComponent
+    ConfigComponent,
+    CrearComponent
   ],
   imports: [
     BrowserModule,

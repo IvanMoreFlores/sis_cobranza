@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { ClienteComponent } from './components/registro/cliente/cliente.component';
 import { ServicioComponent } from './components/registro/servicio/servicio.component';
 import { ConfigComponent } from './components/config/config.component';
+import { CrearComponent } from './components/convenio/crear/crear.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'usuario', component: UsuarioComponent, canActivate: [AuthGuard] },
   { path: 'cliente', component: ClienteComponent, canActivate: [AuthGuard] },
   { path: 'servicio', component: ServicioComponent, canActivate: [AuthGuard] },
+  { path: 'crear', component: CrearComponent, canActivate: [AuthGuard] },
   { path: 'config', component: ConfigComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'home' }
 ];
