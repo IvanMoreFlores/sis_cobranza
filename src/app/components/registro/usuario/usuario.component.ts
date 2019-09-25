@@ -26,8 +26,8 @@ export class UsuarioComponent implements OnInit {
   data: any = [];
   formularioUsuario: FormGroup;
   constructor(private userServ: UsuarioService,
-    private loginServ: LoginService,
-    public fb: FormBuilder) {
+              private loginServ: LoginService,
+              public fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
@@ -43,7 +43,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
       // Button PDF
@@ -116,7 +116,7 @@ export class UsuarioComponent implements OnInit {
     // console.log(this.formularioUsuario.value);
 
     this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
-      if (data[0]['total'] === "0") {
+      if (data[0].total === '0') {
         this.userServ.createUser(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();
           console.log(data);
@@ -214,7 +214,8 @@ export class UsuarioComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, bórralo!'
+      confirmButtonText: 'Sí, bórralo!',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.value) {
         Swal.fire({
@@ -278,8 +279,11 @@ export class UsuarioComponent implements OnInit {
   getCodigoUser() {
     this.userServ.getCodigoUser().subscribe((codigo) => {
       console.log(codigo);
-      const cod = parseInt(codigo[0].total);
-      this.codigo = 'USER000' + (cod + 1);
+      console.log(parseInt(codigo[0].total + 1));
+      console.log(parseInt(codigo[0].total));
+      const cod = parseInt(codigo[0].total) + 1;
+      const numeros = ('0000' + cod).substr(-6, 6);
+      this.codigo = 'USER' + numeros;
       this.formularioUsuario.controls.codigo.setValue(this.codigo);
     });
   }

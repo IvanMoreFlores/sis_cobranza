@@ -32,8 +32,9 @@
                                 <label for="buscarEstado">Estado</label>
                                 <select (change)="buscarPorEstado($event)" class="form-control">
                                     <option value="">.: TODOS :.</option>
-                                    <option value="1">ACTIVO</option>
-                                    <option value="2">INACTIVO</option>
+                                    <option value="4">CREADO</option>
+                                    <option value="5">PROCESO</option>
+                                    <option value="6">FINALIZADO</option>
                                 </select>
                                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                     else.</small> -->
@@ -67,13 +68,13 @@
                 <h4>Listado de convenios</h4>
             </div>
             <div class="card-body">
-                <table datatable id="tabla_usuarios" datatable
-                    class="table table-bordered table-condensed table-hover responsive" cellspacing="0" width="100%">
+                <table id="tabla_usuarios" class="table table-bordered table-condensed table-hover responsive"
+                    cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th class="text-center" width="5%">Nº</th>
                             <th class="text-center" width="10%">Código</th>
-                            <th class="text-center" width="10%">Socio</th>
+                            <th class="text-center" width="20%">Socio</th>
                             <th class="text-center" width="10%">Servicio</th>
                             <th class="text-center" width="10%">Periodo</th>
                             <th class="text-center" width="8%">Monto</th>
@@ -82,32 +83,37 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        <!-- <tr *ngFor="let servicio of servicios; let i = index">
+                        <tr *ngFor="let convenio of convenios; let i = index">
                             <td>{{ i+1 }}</td>
-                            <td>{{ servicio.codigo }}</td>
-                            <td>{{ servicio.nombre }}</td>
-                            <td>{{ servicio.descripcion }}</td>
-                            <td>{{ servicio.periodo }}</td>
-                            <td>S/. {{ servicio.monto }}</td>
+                            <td>{{ convenio.codigo }}</td>
+                            <td>{{ convenio.socio }}</td>
+                            <td>{{ convenio.servicio }}</td>
+                            <td>{{ convenio.periodo }}</td>
+                            <td>S/. {{ convenio.monto }}</td>
                             <td>
                                 <div class="form-group">
-                                    <span *ngIf="servicio.id_estado === '1'"
-                                        class="badge badge-primary">{{ servicio.estado }}</span>
-                                    <span *ngIf="servicio.id_estado === '2'"
-                                        class="badge badge-danger">{{ servicio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '4'"
+                                        class="badge badge-primary">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '5'"
+                                        class="badge badge-danger">{{ convenio.estado }}</span>
                                 </div>
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button (click)="btnEditar(servicio.id_servicio)" class="btn"><i
-                                            class="fa fa-edit fa-2x"></i>
+                                    <button *ngIf="convenio.id_estado === '4'" (click)="btnEditar(convenio.id_servicio)"
+                                        class="btn"><i class="fa fa-edit fa-2x"></i>
                                     </button>
-                                    <button (click)="btnEliminar(servicio.id_servicio)" class="btn"><i
+                                    <button *ngIf="convenio.id_estado === '4'"
+                                        (click)="btnEliminar(convenio.id_servicio)" class="btn"><i
                                             class="fa fa-trash fa-2x"></i>
+                                    </button>
+                                    <button *ngIf="convenio.id_estado === '5' || convenio.id_estado === '6'"
+                                        (click)="btnHistorial(convenio.id_servicio)" class="btn"><i
+                                            class="fa fa-hourglass-half fa-2x"></i>
                                     </button>
                                 </div>
                             </td>
-                        </tr> -->
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -138,11 +144,12 @@
                                         <label style="width: 100%" class="control-label col-md-12">Código de
                                             socio</label>
                                         <div class="col-md-12">
+                                            <input type="hidden" id="id_convenio">
                                             <input type="hidden" id="id_socio">
                                             <input (keyup)="buscarSocio($event)" fullWidth
                                                 style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete" id="buscarSocioId" type="text"> <span
-                                                class="help-block"></span>
+                                                class="form-control autocomplete border" id="buscarSocioId" type="text">
+                                            <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -189,7 +196,8 @@
                                             <input type="hidden" id="id_dias">
                                             <input (keyup)="buscarServicio($event)" fullWidth
                                                 style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete" id="buscarServicioId" type="text">
+                                                class="form-control autocomplete border" id="buscarServicioId"
+                                                type="text">
                                             <span class="help-block"></span>
                                         </div>
                                     </div>
@@ -254,8 +262,8 @@
                                         <label style="width: 100%" class="control-label col-md-12">Periodo en
                                             meses</label>
                                         <div class="col-md-12">
-                                            <select (change)="traer_detalle()" class="form-control" name="id_periodo"
-                                                id="id_periodo">
+                                            <select (change)="traer_detalle()" class="form-control border"
+                                                name="id_periodo" id="id_periodo">
                                                 <option value="" selected disabled>.: SELECCIONE :.</option>
                                                 <option value="1">1 Mes</option>
                                                 <option value="2">2 Meses</option>
@@ -278,7 +286,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <h4 class="page-header">
-                                        <i class="fa fa-check-circle-o"></i><strong> DATOS DEL CONVENIO</strong>
+                                        <i class="fa fa-check-circle-o"></i><strong> DETALLE DEL CONVENIO</strong>
                                     </h4>
                                     <br>
                                 </div>
@@ -311,114 +319,5 @@
             </div>
         </div>
     </div>
-
-
-    <!-- <div id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <form [formGroup]="formularioUsuario">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary">
-                        <h4 class="modal-title text-center text-white">{{ cabecera }}</h4>
-                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                            <span class="text-white" aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body" align="center">
-                        <div class="row" align="center">
-                            <div class="col-md-12" align="center">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Código</label>
-                                            <div class="col-md-12">
-                                                <input type="hidden" formControlName="id_servicio">
-                                                <input readonly fullWidth style="text-transform: uppercase"
-                                                    placeholder="" required class="form-control"
-                                                    formControlName="codigo" [value]="codigo" type="text"> <span
-                                                    class="help-block"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Servicio</label>
-                                            <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
-                                                    required class="form-control" formControlName="nombre"
-                                                    type="text"> <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label style="width: 100%"
-                                                class="control-label col-md-6">Descripción</label>
-                                            <div class="col-md-12">
-                                                <textarea fullWidth style="text-transform: uppercase" placeholder=""
-                                                    required class="form-control" formControlName="descripcion"
-                                                    type="text"> <span
-                                                    class="help-block"></span>
-                                                </textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Periodo</label>
-                                            <div class="col-md-12">
-                                                <select style="height:35px;" required fullWidth
-                                                    placeholder=".: SELECCIONE :." formControlName="id_periodo"
-                                                    class="form-control">
-                                                    <option value="" disabled selected>.: SELECCIONE :.</option>
-                                                    <option value="1">SEMANAL</option>
-                                                    <option value="2">QUINCENAL</option>
-                                                    <option value="3">MENSUAL</option>
-                                                </select> <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label style="width: 100%" class="control-label col-md-6">Monto</label>
-                                            <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
-                                                    required class="form-control" formControlName="monto" type="text">
-                                                <span class="help-block"></span>
-                                                <div
-                                                    *ngIf="formularioUsuario.get('monto').errors && formularioUsuario.get('monto').dirty">
-                                                    <div style="color: red !important" position="stacked" ion-text
-                                                        *ngIf="formularioUsuario.get('monto').hasError('required')">
-                                                        Se requiere Numero de documento
-                                                    </div>
-                                                    <div style="color: red !important" position="stacked" ion-text
-                                                        *ngIf="formularioUsuario.get('monto').hasError('pattern')">
-                                                        Solo numeros
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
-                        <button *ngIf="!estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
-                            (click)="agregarServicio()" type="button" class="btn btn-success">REGISTRAR</button>
-                        <button *ngIf="estado" id="boton_multiuso" [disabled]="!formularioUsuario.valid"
-                            (click)="actualizar()" type="button" class="btn btn-success">ACTUALIZAR</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div> -->
 </div>
 <app-footer></app-footer>

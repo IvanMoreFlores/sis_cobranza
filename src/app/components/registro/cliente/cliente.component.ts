@@ -118,7 +118,7 @@ export class ClienteComponent implements OnInit {
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
     this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
-      if (data[0]['total'] === "0") {
+      if (data[0].total === '0') {
         this.userServ.createCliente(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();
           console.log(data);
@@ -216,7 +216,8 @@ export class ClienteComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, bórralo!'
+      confirmButtonText: 'Sí, bórralo!',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.value) {
         Swal.fire({
@@ -280,8 +281,11 @@ export class ClienteComponent implements OnInit {
   getCodigoUser() {
     this.userServ.getCodigoCliente().subscribe((codigo) => {
       console.log(codigo);
-      const cod = parseInt(codigo[0].total);
-      this.codigo = 'CLN000' + (cod + 1);
+      console.log(parseInt(codigo[0].total + 1));
+      console.log(parseInt(codigo[0].total));
+      const cod = parseInt(codigo[0].total) + 1;
+      const numeros = ('0000' + cod).substr(-6, 6);
+      this.codigo = 'CLNT' + numeros;
       this.formularioUsuario.controls.codigo.setValue(this.codigo);
     });
   }

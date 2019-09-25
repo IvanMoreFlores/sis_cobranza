@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../../../services/cliente/cliente.service';
+import { CrearCService } from '../../../services/crear_c/crear-c.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
+import Swal from 'sweetalert2';
 declare var $: any;
 
 @Component({
@@ -14,6 +16,7 @@ export class CrearComponent implements OnInit {
   userList2: any;
   usuarios = [];
   servicios = [];
+  convenios = [];
   data = [];
   lastkeydown1 = 0;
   lastkeydown2 = 0;
@@ -23,7 +26,19 @@ export class CrearComponent implements OnInit {
   estado: any;
 
   constructor(private userServ: ClienteService,
-              private servServ: ServicioService) { }
+    private servServ: ServicioService,
+    private crearC: CrearCService) {
+    this.crearC.getConvenio().subscribe((data => {
+      this.convenios = data;
+      this.data = data;
+    }));
+  }
+
+  getConvenio() {
+    this.crearC.getConvenio().subscribe((data => {
+      this.convenios = data;
+    }));
+  }
 
   ngOnInit() {
     this.usuarios = [];
@@ -37,7 +52,7 @@ export class CrearComponent implements OnInit {
       Object.assign(this.servicios, data);
     }));
 
-    $('#buscarSocioId').keydown(function(e) {
+    $('#buscarSocioId').keydown(function (e) {
       if (e.keyCode == 8) {
         $('id_socio').val('');
         $('buscarSocioId').val('');
@@ -47,7 +62,7 @@ export class CrearComponent implements OnInit {
       }
     });
 
-    $('#buscarServicioId').keydown(function(e) {
+    $('#buscarServicioId').keydown(function (e) {
       if (e.keyCode == 8) {
         $('id_servicio').val('');
         $('buscarServicioId').val('');
@@ -59,18 +74,55 @@ export class CrearComponent implements OnInit {
   }
 
   btnAgregar() {
-    const f = new Date();
-    // document.write(f.getDate() + '-' + (f.getMonth() + 1) + '-' + f.getFullYear());
-    this.cabecera = 'REGISTRAR NUEVO CONVENIO';
-    $('#fecha_covenio').val(f.getDate() + '-' + (f.getMonth() + 1) + '-' + f.getFullYear());
-    $('#ModalConvenio').modal('show');
+    this.limpiar();
+    this.estado = false;
+    this.crearC.getCountConvenio().subscribe((codigo) => {
+      console.log(codigo);
+      console.log(parseInt(codigo[0].total + 1));
+      console.log(parseInt(codigo[0].total));
+      const cod = parseInt(codigo[0].total) + 1;
+      const numeros = ('0000' + cod).substr(-6, 6);
+      $('#codigo_covenio').val('CNVN' + (numeros));
+      const f = new Date();
+      this.cabecera = 'REGISTRAR NUEVO CONVENIO';
+      $('#fecha_covenio').val(f.getDate() + '-' + (f.getMonth() + 1) + '-' + f.getFullYear());
+      $('#ModalConvenio').modal('show');
+    });
   }
 
-  buscarPorSocio(ev) { }
+  initializeItems() {
+    this.convenios = this.data;
+  }
 
-  buscarPorCodigo(ev) { }
+  buscarPorSocio(ev) {
+    this.initializeItems();
+    const val = ev.target.value;
+    if (val && val.trim() !== '') {
+      this.convenios = this.convenios.filter((convenio: any) => {
+        return (convenio.socio.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
+  }
 
-  buscarPorEstado(ev) { }
+  buscarPorCodigo(ev) {
+    this.initializeItems();
+    const val = ev.target.value;
+    if (val && val.trim() !== '') {
+      this.convenios = this.convenios.filter((convenio: any) => {
+        return (convenio.codigo.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
+  }
+
+  buscarPorEstado(ev) {
+    this.initializeItems();
+    const val = ev.target.value;
+    if (val && val.trim() !== '') {
+      this.convenios = this.convenios.filter((convenio: any) => {
+        return (convenio.id_estado.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
+  }
 
   buscarSocio($event) {
     const userId = (document.getElementById('buscarSocioId') as HTMLInputElement).value.toUpperCase();
@@ -202,29 +254,289 @@ export class CrearComponent implements OnInit {
   }
 
   agregarConvenio() {
+    const codigo = $.trim($('#codigo_covenio').val());
     let id_socio = $.trim($('#id_socio').val());
     let id_servicio = $.trim($('#id_servicio').val());
     let id_periodo = $.trim($('#id_periodo').val());
     let fecha_covenio = $.trim($('#fecha_covenio').val());
 
     if (id_socio === '' || id_socio === null) {
-      $('#id_socio').css('border', '1px solid red');
-      $('#id_socio').focus();
+      $('#buscarSocioId').css('border', '1px solid red');
+      $('#buscarSocioId').focus();
       this.bordes();
       return false;
     }
+    if (id_servicio === '' || id_servicio === null) {
+      $('#buscarServicioId').css('border', '1px solid red');
+      $('#buscarServicioId').focus();
+      this.bordes();
+      return false;
+    }
+    if (id_periodo === '' || id_periodo === null) {
+      $('#id_periodo').css('border', '1px solid red');
+      $('#id_periodo').focus();
+      this.bordes();
+      return false;
+    }
+    if (fecha_covenio === '' || fecha_covenio === null) {
+      $('#fecha_covenio').css('border', '1px solid red');
+      $('#fecha_covenio').focus();
+      this.bordes();
+      return false;
+    } else {
+      let detalle = '[';
+      // (document.getElementById('buscarServicioId') as HTMLInputElement)
+      for (let i = 1; i < (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows.length; i++) {
+        detalle = detalle
+          + '{"n_cuota":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[0].innerHTML + '",'
+          + '"fecha_cuota":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[1].innerHTML + '",'
+          + '"monto":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[2].innerHTML + '"'
+          + '}';
+        if (i === (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows.length - 1) {
+          detalle = detalle + ']';
+        } else {
+          detalle = detalle + ',';
+        }
+      }
 
+      const dataString = 'id_socio=' + id_socio
+        + '&codigo=' + codigo
+        + '&id_servicio=' + id_servicio
+        + '&id_periodo=' + id_periodo
+        + '&id_usuario=' + localStorage.getItem('id')
+        + '&fecha_covenio=' + fecha_covenio
+        + '&detalle=' + detalle;
+      console.log(dataString);
+      Swal.fire({
+        allowOutsideClick: false,
+        type: 'info',
+        text: 'Espere por favor...'
+      });
+      Swal.showLoading();
+      this.crearC.createConvenio(dataString).subscribe((data) => {
+        Swal.close();
+        console.log(data);
+        if (data === true) {
+          this.getConvenio();
+          $('#ModalConvenio').modal('hide');
+          Swal.fire(
+            'Registrado',
+            'Se registro correctamente el servicio',
+            'success'
+          );
+          console.log('true');
+        } else {
+          Swal.fire({
+            type: 'warning',
+            title: 'Error',
+            text: 'Hubo un problema al registrarlo',
+          });
+          console.log('false');
+        }
+      });
+    }
   }
 
   bordes() {
-    setTimeout(function() {
+    setTimeout(function () {
       $('.border').css('border', '');
     }, 2000);
   }
 
-  actualizar() {
+  limpiar() {
+    $('#tabla_detalle tbody').empty();
+    $('#id_socio').val('');
+    $('#buscarSocioId').val('');
+    $('#nombres').val('');
+    $('#documento').val('');
+    $('#puesto').val('');
+    $('#id_servicio').val('');
+    $('#id_dias').val('');
+    $('#buscarServicioId').val('');
+    $('#nombre').val('');
+    $('#monto').val('');
+    $('#periodo').val('');
+    $('#codigo_covenio').val('');
+    $('#fecha_covenio').val('');
+    $('#id_periodo').val('');
 
   }
 
+  btnEditar(id) {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
+    this.limpiar();
+    this.estado = true;
+    this.cabecera = 'EDITAR CONVENIO #' + id;
+    $('#ModalConvenio').modal('show');
+    this.crearC.getConvenioId({ id: id }).subscribe((data => {
+      console.log(data);
+      const user = data[0];
+      $('#id_convenio').val(user.id_convenio);
+      $('#id_socio').val(user.id_socio);
+      $('#buscarSocioId').val(user.codigo_socio);
+      $('#nombres').val(user.socio);
+      $('#documento').val(user.num_socio);
+      $('#puesto').val(user.puesto);
+      $('#id_servicio').val(user.id_servicio);
+      $('#id_dias').val(user.dias);
+      $('#buscarServicioId').val(user.codigo_serv);
+      $('#nombre').val(user.servicio);
+      $('#monto').val(user.monto);
+      $('#periodo').val(user.periodo);
+      $('#codigo_covenio').val(user.codigo);
+      $('#fecha_covenio').val(user.fecha);
+      $('#id_periodo').val(user.id_periodo);
+      this.crearC.getConveniodetalleId({ id: id }).subscribe((data => {
+        Swal.close();
+        let i;
+        for (i = 0; i < data.length; i++) {
+          const nFilas = $('#tabla_detalle tr').length;
+          $('#tabla_detalle > tbody').append('<tr><td>' + nFilas +
+            '</td><td>' + data[i].fecha +
+            '</td><td>' + data[i].monto + '</td></tr>');
+        }
+      }));
+    }));
+  }
 
+  actualizar() {
+    const codigo = $.trim($('#codigo_covenio').val());
+    let id_socio = $.trim($('#id_socio').val());
+    let id_servicio = $.trim($('#id_servicio').val());
+    let id_periodo = $.trim($('#id_periodo').val());
+    let fecha_covenio = $.trim($('#fecha_covenio').val());
+    let id_convenio = $.trim($('#id_convenio').val());
+
+    if (id_socio === '' || id_socio === null) {
+      $('#buscarSocioId').css('border', '1px solid red');
+      $('#buscarSocioId').focus();
+      this.bordes();
+      return false;
+    }
+    if (id_servicio === '' || id_servicio === null) {
+      $('#buscarServicioId').css('border', '1px solid red');
+      $('#buscarServicioId').focus();
+      this.bordes();
+      return false;
+    }
+    if (id_periodo === '' || id_periodo === null) {
+      $('#id_periodo').css('border', '1px solid red');
+      $('#id_periodo').focus();
+      this.bordes();
+      return false;
+    }
+    if (fecha_covenio === '' || fecha_covenio === null) {
+      $('#fecha_covenio').css('border', '1px solid red');
+      $('#fecha_covenio').focus();
+      this.bordes();
+      return false;
+    } else {
+      let detalle = '[';
+      // (document.getElementById('buscarServicioId') as HTMLInputElement)
+      for (let i = 1; i < (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows.length; i++) {
+        detalle = detalle
+          + '{"n_cuota":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[0].innerHTML + '",'
+          + '"fecha_cuota":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[1].innerHTML + '",'
+          + '"monto":"'
+          + (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows[i].cells[2].innerHTML + '"'
+          + '}';
+        if (i === (document.getElementById('tabla_detalle') as HTMLTableSectionElement).rows.length - 1) {
+          detalle = detalle + ']';
+        } else {
+          detalle = detalle + ',';
+        }
+      }
+
+      const dataString = 'id_socio=' + id_socio
+        + '&codigo=' + codigo
+        + '&id_servicio=' + id_servicio
+        + '&id_periodo=' + id_periodo
+        + '&id_usuario=' + localStorage.getItem('id')
+        + '&fecha_covenio=' + fecha_covenio
+        + '&detalle=' + detalle
+        + '&id_convenio=' + id_convenio;
+      console.log(dataString);
+      Swal.fire({
+        allowOutsideClick: false,
+        type: 'info',
+        text: 'Espere por favor...'
+      });
+      Swal.showLoading();
+      this.crearC.UpdateConvenioId(dataString).subscribe((data) => {
+        Swal.close();
+        console.log(data);
+        if (data === true) {
+          this.getConvenio();
+          $('#ModalConvenio').modal('hide');
+          Swal.fire(
+            'Actualizado',
+            'Se actualizo correctamente el servicio',
+            'success'
+          );
+          console.log('true');
+        } else {
+          Swal.fire({
+            type: 'warning',
+            title: 'Error',
+            text: 'Hubo un problema al actualizar',
+          });
+          console.log('false');
+        }
+      });
+    }
+  }
+
+
+  btnEliminar(id) {
+    Swal.fire({
+      title: 'Estás seguro?',
+      text: 'No podrás revertir esto',
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo!',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          allowOutsideClick: false,
+          type: 'info',
+          text: 'Espere por favor...'
+        });
+        Swal.showLoading();
+        this.crearC.DeleteConvenioId({ id: id }).subscribe((data => {
+          Swal.close();
+          if (data === true) {
+            this.getConvenio();
+            Swal.fire(
+              'Eliminado!',
+              'Su registro ha sido eliminado.',
+              'success'
+            );
+          } else {
+            Swal.fire({
+              type: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar',
+            });
+          }
+        }));
+      }
+    });
+  }
+
+  btnHistorial(id) {
+
+  }
 }

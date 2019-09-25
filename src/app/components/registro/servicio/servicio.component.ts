@@ -101,8 +101,11 @@ export class ServicioComponent implements OnInit {
   getCodigoService() {
     this.userServ.getCodigoServicio().subscribe((codigo) => {
       console.log(codigo);
-      const cod = parseInt(codigo[0].total);
-      this.codigo = 'SERV0000' + (cod + 1);
+      console.log(parseInt(codigo[0].total + 1));
+      console.log(parseInt(codigo[0].total));
+      const cod = parseInt(codigo[0].total) + 1;
+      const numeros = ('0000' + cod).substr(-6, 6);
+      this.codigo = 'SERV' + numeros;
       this.formularioUsuario.controls.codigo.setValue(this.codigo);
     });
   }
@@ -191,7 +194,8 @@ export class ServicioComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, bórralo!'
+      confirmButtonText: 'Sí, bórralo!',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.value) {
         Swal.fire({
