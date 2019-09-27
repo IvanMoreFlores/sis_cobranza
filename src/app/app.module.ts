@@ -20,6 +20,8 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfigComponent } from './components/config/config.component';
 import { CrearComponent } from './components/convenio/crear/crear.component';
+import { PagarComponent } from './components/convenio/pagar/pagar.component';
+import { DeudaComponent } from './components/convenio/deuda/deuda.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { CrearComponent } from './components/convenio/crear/crear.component';
     FooterComponent,
     LoginComponent,
     ConfigComponent,
-    CrearComponent
+    CrearComponent,
+    PagarComponent,
+    DeudaComponent
   ],
   imports: [
     BrowserModule,

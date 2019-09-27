@@ -17,6 +17,8 @@ export class CrearCService {
   apigetConveniodetalleId: string = this.ip + 'getConveniodetalleId';
   apigUpdateConvenioId: string = this.ip + 'UpdateConvenioId';
   apigDeleteConvenioId: string = this.ip + 'DeleteConvenioId';
+  apigPagarConvenioId: string = this.ip + 'PagarConvenioId';
+  apigetMora: string = this.ip + 'getMora';
   constructor(public http: HttpClient) { }
 
   getConvenio(): Observable<any> {
@@ -100,6 +102,30 @@ export class CrearCService {
     };
     return this.http
       .post(this.apigDeleteConvenioId, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  PagarConvenioId(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigPagarConvenioId, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getMora(): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .get(this.apigetMora, httpOptions)
       .pipe(map(results => results));
   }
 }

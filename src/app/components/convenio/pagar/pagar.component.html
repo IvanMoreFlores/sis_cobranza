@@ -3,7 +3,7 @@
     <section class="content animated fadeIn fast">
         <div class="card content animated fadeIn">
             <div class="card-header bg-primary text-white">
-                <h4>Crear convenio</h4>
+                <h4>Pagar convenio</h4>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -44,8 +44,8 @@
                     <div class="row">
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
-                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button>
+                                <!-- <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
+                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button> -->
                             </div>
                         </div>
                         <div class="col-md-4 ml-auto">
@@ -102,14 +102,11 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button *ngIf="convenio.id_estado === '4'" (click)="btnEditar(convenio.id_servicio)"
-                                        class="btn"><i class="fa fa-edit fa-2x"></i>
+                                    <button *ngIf="convenio.id_estado === '4' || convenio.id_estado === '5'"
+                                        (click)="btnEditar(convenio.id_servicio)" class="btn"><i
+                                            class="fa fa-calendar-check-o fa-2x"></i>
                                     </button>
-                                    <button *ngIf="convenio.id_estado === '4'"
-                                        (click)="btnEliminar(convenio.id_servicio)" class="btn"><i
-                                            class="fa fa-trash fa-2x"></i>
-                                    </button>
-                                    <button *ngIf="convenio.id_estado === '5' || convenio.id_estado === '6'"
+                                    <button *ngIf="convenio.id_estado === '6'"
                                         (click)="btnHistorial(convenio.id_servicio)" class="btn"><i
                                             class="fa fa-hourglass-half fa-2x"></i>
                                     </button>
@@ -148,7 +145,7 @@
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_convenio">
                                             <input type="hidden" id="id_socio">
-                                            <input (keyup)="buscarSocio($event)" fullWidth
+                                            <input (keyup)="buscarSocio($event)" fullWidth readonly
                                                 style="text-transform: uppercase" placeholder="" required
                                                 class="form-control autocomplete border" id="buscarSocioId" type="text">
                                             <span class="help-block"></span>
@@ -196,7 +193,7 @@
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_servicio">
                                             <input type="hidden" id="id_dias">
-                                            <input (keyup)="buscarServicio($event)" fullWidth
+                                            <input (keyup)="buscarServicio($event)" fullWidth readonly
                                                 style="text-transform: uppercase" placeholder="" required
                                                 class="form-control autocomplete border" id="buscarServicioId"
                                                 type="text">
@@ -264,7 +261,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">Periodo en
                                             meses</label>
                                         <div class="col-md-12">
-                                            <select (change)="traer_detalle()" class="form-control border"
+                                            <select (change)="traer_detalle()" class="form-control border" disabled
                                                 name="id_periodo" id="id_periodo">
                                                 <option value="" selected disabled>.: SELECCIONE :.</option>
                                                 <option value="1">1 Mes</option>
@@ -288,22 +285,26 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <h4 class="page-header">
-                                        <i class="fa fa-check-circle-o"></i><strong> DETALLE DEL CONVENIO</strong>
+                                        <i class="fa fa-check-circle-o"></i><strong> DETALLE DE LAS CUOTAS</strong>
                                     </h4>
                                     <br>
                                 </div>
                                 <div class="col-md-12">
                                     <table id="tabla_detalle"
                                         class="table table-hover table-condensed table-striped tabla_detalle"
-                                        style="width: 100%; cellspacing: 0">
+                                        style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" width="5%">Nº</th>
                                                 <th class="text-center" width="10%">Fecha</th>
                                                 <th class="text-center" width="10%">Monto</th>
+                                                <th class="text-center" width="10%">Estado</th>
+                                                <th class="text-center" width="10%">Pago</th>
+                                                <th class="text-center" width="10%">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-center">
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -316,7 +317,7 @@
                     <button *ngIf="!estado" id="boton_multiuso" (click)="agregarConvenio()" type="button"
                         class="btn btn-success">REGISTRAR</button>
                     <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button"
-                        class="btn btn-success">ACTUALIZAR</button>
+                        class="btn btn-success">PAGAR</button>
                 </div>
             </div>
         </div>
