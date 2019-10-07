@@ -103,11 +103,11 @@
                             <td>
                                 <div class="btn-group">
                                     <button *ngIf="convenio.id_estado === '4' || convenio.id_estado === '5'"
-                                        (click)="btnEditar(convenio.id_servicio)" class="btn"><i
+                                        (click)="btnEditar(convenio.id_convenio)" class="btn"><i
                                             class="fa fa-calendar-check-o fa-2x"></i>
                                     </button>
                                     <button *ngIf="convenio.id_estado === '6'"
-                                        (click)="btnHistorial(convenio.id_servicio)" class="btn"><i
+                                        (click)="btnHistorial(convenio.id_convenio)" class="btn"><i
                                             class="fa fa-hourglass-half fa-2x"></i>
                                     </button>
                                 </div>
@@ -318,6 +318,21 @@
                         class="btn btn-success">REGISTRAR</button>
                     <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button"
                         class="btn btn-success">PAGAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="historial" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary" style="color: white;font-weight: bold;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 id="cabecera" class="modal-title text-center"></h3>
+                </div>
+                <div class="modal-body" align="center" id="timeline">
                 </div>
             </div>
         </div>

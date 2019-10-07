@@ -28,8 +28,8 @@ export class PagarComponent implements OnInit {
   detalles: any;
 
   constructor(private userServ: ClienteService,
-              private servServ: ServicioService,
-              private crearC: CrearCService) {
+    private servServ: ServicioService,
+    private crearC: CrearCService) {
     this.crearC.getConvenio().subscribe((data => {
       this.convenios = data;
       this.data = data;
@@ -54,7 +54,7 @@ export class PagarComponent implements OnInit {
       Object.assign(this.servicios, data);
     }));
 
-    $('#buscarSocioId').keydown(function(e) {
+    $('#buscarSocioId').keydown(function (e) {
       if (e.keyCode == 8) {
         $('id_socio').val('');
         $('buscarSocioId').val('');
@@ -64,7 +64,7 @@ export class PagarComponent implements OnInit {
       }
     });
 
-    $('#buscarServicioId').keydown(function(e) {
+    $('#buscarServicioId').keydown(function (e) {
       if (e.keyCode == 8) {
         $('id_servicio').val('');
         $('buscarServicioId').val('');
@@ -329,7 +329,7 @@ export class PagarComponent implements OnInit {
   }
 
   bordes() {
-    setTimeout(function() {
+    setTimeout(function () {
       $('.border').css('border', '');
     }, 2000);
   }
@@ -400,7 +400,7 @@ export class PagarComponent implements OnInit {
             estado = 'badge-success';
             estado_ = 'PAGADO';
             radio = 'disabled="true" checked ';
-            botton = 'fa-eye';
+            botton = 'fa-print';
           }
           const nFilas = $('#tabla_detalle tr').length;
           $('#tabla_detalle > tbody').append('<tr><td>' + nFilas +
@@ -423,13 +423,14 @@ export class PagarComponent implements OnInit {
     Swal.showLoading();
     const id = $('#id_convenio').val();
     const cuota = [];
-    $('[name="cuota[]"]:checked').each(function() {
+    $('[name="cuota[]"]:checked').each(function () {
       cuota.push($(this).val());
     });
     const dataString = 'id=' + id
       + '&cuota=' + cuota;
     console.log(cuota.length);
     if (cuota.length === 0) {
+      Swal.close();
       $('#ModalConvenio').modal('hide');
     } else {
       this.crearC.PagarConvenioId(dataString).subscribe((data) => {
@@ -439,7 +440,7 @@ export class PagarComponent implements OnInit {
           this.getConvenio();
           $('#ModalConvenio').modal('hide');
           Swal.fire(
-            'Registrado',
+            'Pagado',
             'Se registro correctamente el pago de servicio',
             'success'
           );
@@ -458,6 +459,6 @@ export class PagarComponent implements OnInit {
 
 
   btnHistorial(id) {
-
+    $('#historial').modal('show');
   }
 }
