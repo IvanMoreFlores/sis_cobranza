@@ -22,6 +22,8 @@ import { ConfigComponent } from './components/config/config.component';
 import { CrearComponent } from './components/convenio/crear/crear.component';
 import { PagarComponent } from './components/convenio/pagar/pagar.component';
 import { DeudaComponent } from './components/convenio/deuda/deuda.component';
+import { IndicadorUnoComponent } from './components/estadistica/indicador-uno/indicador-uno.component';
+import { IndicadorDosComponent } from './components/estadistica/indicador-dos/indicador-dos.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { DeudaComponent } from './components/convenio/deuda/deuda.component';
     ConfigComponent,
     CrearComponent,
     PagarComponent,
-    DeudaComponent
+    DeudaComponent,
+    IndicadorUnoComponent,
+    IndicadorDosComponent
   ],
   imports: [
     BrowserModule,

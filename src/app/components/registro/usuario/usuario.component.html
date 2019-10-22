@@ -134,7 +134,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Código</label>
                                             <div class="col-md-12">
                                                 <input readonly fullWidth style="text-transform: uppercase"
-                                                    placeholder="" required class="form-control"
+                                                    placeholder="" required class="form-control" id="codigo"
                                                     formControlName="codigo" [value]="codigo" type="text"> <span
                                                     class="help-block"></span>
                                             </div>
@@ -145,7 +145,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Rol</label>
                                             <div class="col-md-12">
                                                 <select style="height:35px;" required fullWidth
-                                                    placeholder=".: SELECCIONE :." formControlName="id_rol"
+                                                    placeholder=".: SELECCIONE :." formControlName="id_rol" id="id_rol"
                                                     class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
                                                     <option *ngFor="let rol of roles" [value]="rol.id_rol">{{rol.rol}}
@@ -159,7 +159,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Tipo de
                                                 documento</label>
                                             <div class="col-md-12">
-                                                <select style="height:35px;" required fullWidth
+                                                <select style="height:35px;" required fullWidth id="id_documento"
                                                     placeholder=".: SELECCIONE :." formControlName="id_documento"
                                                     class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
@@ -177,8 +177,8 @@
                                             <label style="width: 100%" class="control-label col-md-12">Numero de
                                                 documento</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
-                                                    required class="form-control" formControlName="numero_doc"
+                                                <input fullWidth style="text-transform: uppercase" placeholder="" maxlength="12"
+                                                    required class="form-control" formControlName="numero_doc" id="numero_doc"
                                                     type="text"> <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('numero_doc').errors && formularioUsuario.get('numero_doc').dirty">
@@ -201,7 +201,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Sexo</label>
                                             <div class="col-md-12">
                                                 <select style="height:35px;" required fullWidth fullWidth
-                                                    placeholder=".: SELECCIONE :." formControlName="id_sexo"
+                                                    placeholder=".: SELECCIONE :." formControlName="id_sexo" id="id_sexo"
                                                     class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
                                                     <option *ngFor="let sexo of sexos" [value]="sexo.id_sexo">
@@ -215,7 +215,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="nombres"
                                                     required class="form-control" formControlName="nombres" type="text">
                                                 <span class="help-block">
                                                     <div
@@ -240,7 +240,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="apellido_pat"
                                                     required class="form-control" formControlName="apellido_pat"
                                                     type="text">
                                                 <span class="help-block">
@@ -264,7 +264,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="apellido_mat"
                                                     required class="form-control" formControlName="apellido_mat"
                                                     type="text">
                                                 <span class="help-block">
@@ -287,7 +287,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Usuario</label>
                                             <div class="col-md-12">
-                                                <input class="form-control" style="text-transform: uppercase"
+                                                <input class="form-control" style="text-transform: uppercase" id="user"
                                                     (focus)="obtenerUser()" required readonly type="text" fullWidth
                                                     formControlName="user" placeholder="">
                                                 <span class="help-block">
@@ -303,7 +303,7 @@
                                             <label style="width: 100%"
                                                 class="control-label col-md-12">Contraseña</label>
                                             <div class="col-md-12">
-                                                <input class="form-control" required type="password" nbInput fullWidth
+                                                <input class="form-control" required type="password" nbInput fullWidth id="password"
                                                     formControlName="password" placeholder="">
                                                 <span class="help-block">
                                                 </span>

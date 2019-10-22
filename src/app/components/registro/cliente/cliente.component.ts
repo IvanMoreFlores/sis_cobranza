@@ -97,8 +97,23 @@ export class ClienteComponent implements OnInit {
     }
   }
 
+  limpiar() {
+    $('#codigo').val('');
+    $('#id_rol').val('');
+    $('#puesto').val('');
+    $('#id_documento').val('');
+    $('#numero_doc').val('');
+    $('#id_sexo').val('');
+    $('#nombres').val('');
+    $('#apellido_pat').val('');
+    $('#apellido_mat').val('');
+    $('#user').val('');
+    $('#password').val('');
+  }
+
 
   btnAgregar() {
+    this.limpiar();
     this.formularioUsuario.controls.id_rol.setValue('SOCIO');
     this.estado = false;
     this.getRol();
@@ -117,7 +132,7 @@ export class ClienteComponent implements OnInit {
     });
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
-    this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
+    this.loginServ.countUser({ user: this.formularioUsuario.value.user, dni: this.formularioUsuario.value.numero_doc }).subscribe((data => {
       if (data[0].total === '0') {
         this.userServ.createCliente(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();

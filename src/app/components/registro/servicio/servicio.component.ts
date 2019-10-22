@@ -91,6 +91,14 @@ export class ServicioComponent implements OnInit {
     }
   }
 
+  limpiar() {
+    $('#codigo').val('');
+    $('#nombre').val('');
+    $('#descripcion').val('');
+    $('#id_periodo').val('');
+    $('#monto').val('');
+  }
+
   btnAgregar() {
     this.estado = false;
     this.getCodigoService();

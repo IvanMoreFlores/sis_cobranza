@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+<div class="container main-container">
+    <section class="content animated fadeIn fast">
+        <div class="card content animated fadeIn">
+            <div class="card-header bg-primary text-white">
+                <h4>Rotación de cuentas por cobrar</h4>
+            </div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Fecha Inicio</label>
+                                <input readonly type="text" class="form-control datepicker"
+                                    data-date-format="yyyy/mm/dd" id="f_inicio" style="text-transform: uppercase;"
+                                    width="276" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Fecha Fin</label>
+                                <input readonly type="text" width="276" class="form-control datepicker" id="f_fin"
+                                    placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-4 ml-auto">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">&nbsp;</label>
+                                <button id="btn_bucar" data-toggle="modal" data-target="#myModal"
+                                    class="btn btn-primary btn-block" (click)="btn_buscar()">Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="div_tabla" class="card content animated fadeIn" style="margin-top: 20px">
+            <div class="card-header bg-primary text-white">
+                <h4>Reporte</h4>
+            </div>
+            <div class="card-body">
+                <table id="tabla_indicador" class="table table-bordered table-condensed table-hover responsive"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="5%">Nº</th>
+                            <th class="text-center" width="10%">Fecha</th>
+                            <th class="text-center" width="10%">Cantidad de cuentas por cobrar</th>
+                            <th class="text-center" width="10%">Servicios totales</th>
+                            <th class="text-center" width="10%">Cuentas por cobrar</th>
+                            <th class="text-center" width="10%">Rotación de cuentas por cobrar</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr *ngFor="let convenio of convenios; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ convenio.fecha }}</td>
+                            <td>{{ convenio.n_convenio }}</td>
+                            <td>S/. {{ convenio.monto }}</td>
+                            <td>S/. {{ convenio.monto_deuda }}</td>
+                            <td>{{ convenio.indicador }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="div_porcentaje">
+                        <tr>
+                            <td colspan="2"><button class="btn btn-danger btn-block"
+                                    (click)="btn_grafico()">GRAFICO</button></td>
+                            <td class="text-center"><b>{{ n_convenio }}</b></td>
+                            <td class="text-center"><b>S/. {{ monto }}</b></td>
+                            <td class="text-center"><b>S/. {{ monto_deuda }}</b></td>
+                            <td class="text-center"><b> {{ indicador}}</b></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+        <div id="div_grafica" class="card content animated fadeIn" style="margin-top: 20px">
+            <div class="card-header bg-primary text-white">
+                <h4>Grafico</h4>
+            </div>
+            <div class="card-body">
+                <div style="width:100%;" id="contenedor_grafico">
+                    <canvas #barCanvas id="barCanvas">>{{ barchart }}</canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+</div>
+<app-footer></app-footer>

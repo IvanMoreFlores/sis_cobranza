@@ -1,3 +1,4 @@
+import { IndicadorDosComponent } from './components/estadistica/indicador-dos/indicador-dos.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
@@ -10,6 +11,8 @@ import { ConfigComponent } from './components/config/config.component';
 import { CrearComponent } from './components/convenio/crear/crear.component';
 import { PagarComponent } from './components/convenio/pagar/pagar.component';
 import { DeudaComponent } from './components/convenio/deuda/deuda.component';
+import { IndicadorUnoComponent } from './components/estadistica/indicador-uno/indicador-uno.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,6 +24,8 @@ const routes: Routes = [
   { path: 'crear', component: CrearComponent, canActivate: [AuthGuard] },
   { path: 'pagar', component: PagarComponent, canActivate: [AuthGuard] },
   { path: 'deuda', component: DeudaComponent, canActivate: [AuthGuard] },
+  { path: 'ind_uno', component: IndicadorUnoComponent, canActivate: [AuthGuard] },
+  { path: 'ind_dos', component: IndicadorDosComponent, canActivate: [AuthGuard] },
   { path: 'config', component: ConfigComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'home' }
 ];

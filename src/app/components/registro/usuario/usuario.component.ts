@@ -26,8 +26,8 @@ export class UsuarioComponent implements OnInit {
   data: any = [];
   formularioUsuario: FormGroup;
   constructor(private userServ: UsuarioService,
-              private loginServ: LoginService,
-              public fb: FormBuilder) {
+    private loginServ: LoginService,
+    public fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
@@ -43,7 +43,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    $(document).ready(function() {
+    $(document).ready(function () {
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
       // Button PDF
@@ -95,8 +95,22 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
+  limpiar() {
+    $('#codigo').val('');
+    $('#id_rol').val('');
+    $('#id_documento').val('');
+    $('#numero_doc').val('');
+    $('#id_sexo').val('');
+    $('#nombres').val('');
+    $('#apellido_pat').val('');
+    $('#apellido_mat').val('');
+    $('#user').val('');
+    $('#password').val('');
+  }
+
 
   btnAgregar() {
+    this.limpiar();
     this.estado = false;
     this.getRol();
     this.getDocumento();
@@ -115,7 +129,7 @@ export class UsuarioComponent implements OnInit {
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
 
-    this.loginServ.countUser({ user: this.formularioUsuario.value.user }).subscribe((data => {
+    this.loginServ.countUser({ user: this.formularioUsuario.value.user, dni: this.formularioUsuario.value.numero_doc }).subscribe((data => {
       if (data[0].total === '0') {
         this.userServ.createUser(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();
