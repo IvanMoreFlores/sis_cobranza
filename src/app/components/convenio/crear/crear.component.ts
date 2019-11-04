@@ -56,7 +56,7 @@ export class CrearComponent implements OnInit {
       if (e.keyCode == 8) {
         $('id_socio').val('');
         $('buscarSocioId').val('');
-        $('#nombres').val('');
+        $('#codigo').val('');
         $('#puesto').val('');
         $('#documento').val('');
       }
@@ -66,7 +66,7 @@ export class CrearComponent implements OnInit {
       if (e.keyCode == 8) {
         $('id_servicio').val('');
         $('buscarServicioId').val('');
-        $('#nombre').val('');
+        $('#servicio').val('');
         $('#periodo').val('');
         $('#monto').val('');
       }
@@ -139,7 +139,7 @@ export class CrearComponent implements OnInit {
           source: this.userList2,
           select(event, ui) {
             console.log(ui);
-            $('#nombres').val(ui.item.nombre);
+            $('#codigo').val(ui.item.codigo);
             $('#puesto').val(ui.item.puesto);
             $('#id_socio').val(ui.item.id_usuario);
             $('#documento').val(ui.item.numero_doc);
@@ -160,10 +160,10 @@ export class CrearComponent implements OnInit {
     console.log(regex);
     let matches = [], i;
     for (i = 0; i < arr.length; i++) {
-      console.log(arr[i].codigo);
-      if (arr[i].codigo.match(regex)) {
+      console.log(arr[i].nombre);
+      if (arr[i].nombre.match(regex)) {
         // tslint:disable-next-line: max-line-length
-        matches.push({ value: arr[i].codigo, label: arr[i].codigo, id_usuario: arr[i].id_usuario, puesto: arr[i].puesto, nombre: arr[i].nombre, numero_doc: arr[i].numero_doc });
+        matches.push({ value: arr[i].nombre, label: arr[i].nombre, id_usuario: arr[i].id_usuario, puesto: arr[i].puesto, codigo: arr[i].codigo, numero_doc: arr[i].numero_doc });
         console.log(matches);
       }
     }
@@ -185,7 +185,7 @@ export class CrearComponent implements OnInit {
           source: this.userList2,
           select(event, ui) {
             console.log(ui);
-            $('#nombre').val(ui.item.nombre);
+            $('#servicio').val(ui.item.codigo);
             $('#periodo').val(ui.item.periodo);
             $('#id_servicio').val(ui.item.id_servicio);
             $('#monto').val(ui.item.monto);
@@ -206,10 +206,10 @@ export class CrearComponent implements OnInit {
     console.log(regex);
     let matches = [], i;
     for (i = 0; i < arr.length; i++) {
-      console.log(arr[i].codigo);
-      if (arr[i].codigo.match(regex)) {
+      console.log(arr[i].nombre);
+      if (arr[i].nombre.match(regex)) {
         // tslint:disable-next-line: max-line-length
-        matches.push({ value: arr[i].codigo, label: arr[i].codigo, id_servicio: arr[i].id_servicio, periodo: arr[i].periodo, nombre: arr[i].nombre, monto: arr[i].monto, dias: arr[i].dias });
+        matches.push({ value: arr[i].nombre, label: arr[i].nombre, id_servicio: arr[i].id_servicio, periodo: arr[i].periodo, codigo: arr[i].codigo, monto: arr[i].monto, dias: arr[i].dias });
         console.log(matches);
       }
     }
@@ -350,13 +350,13 @@ export class CrearComponent implements OnInit {
     $('#tabla_detalle tbody').empty();
     $('#id_socio').val('');
     $('#buscarSocioId').val('');
-    $('#nombres').val('');
+    $('#codigo').val('');
     $('#documento').val('');
     $('#puesto').val('');
     $('#id_servicio').val('');
     $('#id_dias').val('');
     $('#buscarServicioId').val('');
-    $('#nombre').val('');
+    $('#servicio').val('');
     $('#monto').val('');
     $('#periodo').val('');
     $('#codigo_covenio').val('');
@@ -381,14 +381,14 @@ export class CrearComponent implements OnInit {
       const user = data[0];
       $('#id_convenio').val(user.id_convenio);
       $('#id_socio').val(user.id_socio);
-      $('#buscarSocioId').val(user.codigo_socio);
-      $('#nombres').val(user.socio);
+      $('#buscarSocioId').val(user.socio);
+      $('#codigo').val(user.codigo_socio);
       $('#documento').val(user.num_socio);
       $('#puesto').val(user.puesto);
       $('#id_servicio').val(user.id_servicio);
       $('#id_dias').val(user.dias);
-      $('#buscarServicioId').val(user.codigo_serv);
-      $('#nombre').val(user.servicio);
+      $('#buscarServicioId').val(user.servicio);
+      $('#servicio').val(user.codigo_serv);
       $('#monto').val(user.monto);
       $('#periodo').val(user.periodo);
       $('#codigo_covenio').val(user.codigo);
@@ -537,6 +537,13 @@ export class CrearComponent implements OnInit {
   }
 
   btnHistorial(id) {
-
+    const dataString = 'id=' + id;
+    this.crearC.getHistorial(dataString).subscribe((data => {
+      $('#timeline').html(data);
+      $('#modal_form_usuario').modal('show');
+      $('#cabecera').html("HISTORIAL DEL REQUERIMIENTO #" + id);
+      $('#historial').modal('show');
+    }));
   }
+
 }

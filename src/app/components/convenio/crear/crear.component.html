@@ -143,8 +143,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Código de
-                                            socio</label>
+                                        <label style="width: 100%" class="control-label col-md-12">Nombres
+                                            completos</label>
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_convenio">
                                             <input type="hidden" id="id_socio">
@@ -157,11 +157,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Nombres
-                                            completos</label>
+                                        <label style="width: 100%" class="control-label col-md-12">Código de
+                                            socio</label>
                                         <div class="col-md-12">
                                             <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="nombres" type="text"> <span
+                                                required class="form-control" id="codigo" type="text"> <span
                                                 class="help-block"></span>
                                         </div>
                                     </div>
@@ -191,8 +191,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Código de
-                                            servicio</label>
+                                        <label style="width: 100%" class="control-label col-md-12">Servicio</label>
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_servicio">
                                             <input type="hidden" id="id_dias">
@@ -206,10 +205,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Servicio</label>
+                                        <label style="width: 100%" class="control-label col-md-12">Código de
+                                            servicio</label>
                                         <div class="col-md-12">
                                             <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="nombre" type="text"> <span
+                                                required class="form-control" id="servicio" type="text"> <span
                                                 class="help-block"></span>
                                         </div>
                                     </div>
@@ -317,6 +317,20 @@
                         class="btn btn-success">REGISTRAR</button>
                     <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button"
                         class="btn btn-success">ACTUALIZAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="historial" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary" style="color: white;font-weight: bold;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 id="cabecera" class="modal-title text-center"></h3>
+                </div>
+                <div class="modal-body" align="center" id="timeline">
                 </div>
             </div>
         </div>

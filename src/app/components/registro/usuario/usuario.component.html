@@ -159,9 +159,9 @@
                                             <label style="width: 100%" class="control-label col-md-12">Tipo de
                                                 documento</label>
                                             <div class="col-md-12">
-                                                <select style="height:35px;" required fullWidth id="id_documento"
-                                                    placeholder=".: SELECCIONE :." formControlName="id_documento"
-                                                    class="form-control">
+                                                <select (change)="tipo_doc()" style="height:35px;" required fullWidth
+                                                    id="id_documento" placeholder=".: SELECCIONE :."
+                                                    formControlName="id_documento" class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
                                                     <option *ngFor="let documento of documentos"
                                                         [value]="documento.id_documento">{{documento.documento}}
@@ -177,9 +177,10 @@
                                             <label style="width: 100%" class="control-label col-md-12">Numero de
                                                 documento</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" maxlength="12"
-                                                    required class="form-control" formControlName="numero_doc" id="numero_doc"
-                                                    type="text"> <span class="help-block">
+                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                    maxlength="12" required class="form-control"
+                                                    formControlName="numero_doc" id="numero_doc" type="text"> <span
+                                                    class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('numero_doc').errors && formularioUsuario.get('numero_doc').dirty">
                                                         <div style="color: red !important" position="stacked" ion-text
@@ -201,8 +202,8 @@
                                             <label style="width: 100%" class="control-label col-md-12">Sexo</label>
                                             <div class="col-md-12">
                                                 <select style="height:35px;" required fullWidth fullWidth
-                                                    placeholder=".: SELECCIONE :." formControlName="id_sexo" id="id_sexo"
-                                                    class="form-control">
+                                                    placeholder=".: SELECCIONE :." formControlName="id_sexo"
+                                                    id="id_sexo" class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
                                                     <option *ngFor="let sexo of sexos" [value]="sexo.id_sexo">
                                                         {{sexo.sexo}}
@@ -215,8 +216,9 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="nombres"
-                                                    required class="form-control" formControlName="nombres" type="text">
+                                                <input  maxlength="15" fullWidth style="text-transform: uppercase" placeholder=""
+                                                    id="nombres" required class="form-control" formControlName="nombres"
+                                                    type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('nombres').errors && formularioUsuario.get('nombres').dirty">
@@ -240,9 +242,9 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="apellido_pat"
-                                                    required class="form-control" formControlName="apellido_pat"
-                                                    type="text">
+                                                <input maxlength="15" fullWidth style="text-transform: uppercase" placeholder=""
+                                                    id="apellido_pat" required class="form-control"
+                                                    formControlName="apellido_pat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_pat').errors && formularioUsuario.get('apellido_pat').dirty">
@@ -264,9 +266,9 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="apellido_mat"
-                                                    required class="form-control" formControlName="apellido_mat"
-                                                    type="text">
+                                                <input maxlength="15" fullWidth style="text-transform: uppercase" placeholder=""
+                                                    id="apellido_mat" required class="form-control"
+                                                    formControlName="apellido_mat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_mat').errors && formularioUsuario.get('apellido_mat').dirty">
@@ -303,8 +305,8 @@
                                             <label style="width: 100%"
                                                 class="control-label col-md-12">Contraseña</label>
                                             <div class="col-md-12">
-                                                <input class="form-control" required type="password" nbInput fullWidth id="password"
-                                                    formControlName="password" placeholder="">
+                                                <input class="form-control" required type="password" nbInput fullWidth
+                                                    id="password" formControlName="password" placeholder="">
                                                 <span class="help-block">
                                                 </span>
                                             </div>

@@ -9,8 +9,7 @@ import { map } from 'rxjs/operators';
 export class LoginService {
 
   datos: any;
-  // ip = 'http://172.25.13.91/API_SENAMHI/App_movil/';
-  ip = 'http://172.25.13.91/API_COBRANZA/c_login/';
+  ip = 'http://127.0.0.1/API_COBRANZA/c_login/';
   apiLogin: string = this.ip + 'Login';
   apigetUser: string = this.ip + 'getUser';
   apigetCliente: string = this.ip + 'getCliente';

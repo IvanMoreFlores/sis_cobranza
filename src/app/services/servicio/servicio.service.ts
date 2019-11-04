@@ -9,8 +9,7 @@ import { map } from 'rxjs/operators';
 export class ServicioService {
 
   datos: any;
-  // ip = 'http://172.25.13.91/API_SENAMHI/App_movil/';
-  ip = 'http://172.25.13.91/API_COBRANZA/c_registro/';
+  ip = 'http://127.0.0.1/API_COBRANZA/c_registro/';
   apigetServicio: string = this.ip + 'getServicio';
   apigetCodigoServicio: string = this.ip + 'getCodigoServicio';
   apiServicioCreate: string = this.ip + 'ServicioCreate';

@@ -172,7 +172,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Tipo de
                                                 documento</label>
                                             <div class="col-md-12">
-                                                <select style="height:35px;" required fullWidth id="id_documento"
+                                                <select (change)="tipo_doc()" style="height:35px;" required fullWidth id="id_documento"
                                                     placeholder=".: SELECCIONE :." formControlName="id_documento"
                                                     class="form-control">
                                                     <option value="" disabled selected>.: SELECCIONE :.</option>
@@ -230,7 +230,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="nombres"
+                                                <input maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="nombres"
                                                     required class="form-control" formControlName="nombres" type="text">
                                                 <span class="help-block">
                                                     <div
@@ -252,7 +252,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                <input maxlength="15" fullWidth style="text-transform: uppercase" placeholder=""
                                                     required class="form-control" formControlName="apellido_pat" id="apellido_pat"
                                                     type="text">
                                                 <span class="help-block">
@@ -276,7 +276,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder=""
+                                                <input maxlength="15" fullWidth style="text-transform: uppercase" placeholder=""
                                                     required class="form-control" formControlName="apellido_mat" id="apellido_mat"
                                                     type="text">
                                                 <span class="help-block">

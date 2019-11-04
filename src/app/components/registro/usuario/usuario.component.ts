@@ -32,11 +32,11 @@ export class UsuarioComponent implements OnInit {
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
       id_documento: ['', [Validators.required]],
-      numero_doc: ['', [Validators.required, Validators.pattern(/^[1-9]\d{7,12}$/)]],
+      numero_doc: ['', [Validators.required, Validators.pattern(/^[0-9]\d{7,12}$/)]],
       id_sexo: ['', [Validators.required]],
-      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
-      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
-      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
       user: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
@@ -57,8 +57,19 @@ export class UsuarioComponent implements OnInit {
     this.userServ.getUser().subscribe((data => {
       this.usuarios = data;
       this.data = data;
+      $('#tabla_usuarios_filter').css('display', 'none');
+      $('#tabla_usuarios_length').css('display', 'none');
     }));
   }
+
+  tipo_doc() {
+    if ($('#id_documento').val() === '1') {
+      $('#numero_doc').attr('maxlength', '8');
+    } else {
+      $('#numero_doc').attr('maxlength', '12');
+    }
+  }
+
 
   initializeItems() {
     this.usuarios = this.data;

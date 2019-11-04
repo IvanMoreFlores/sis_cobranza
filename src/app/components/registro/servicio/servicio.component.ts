@@ -53,6 +53,8 @@ export class ServicioComponent implements OnInit {
     this.userServ.getServicio().subscribe((data => {
       this.servicios = data;
       this.data = data;
+      $('#tabla_usuarios_filter').css('display', 'none');
+      $('#tabla_usuarios_length').css('display', 'none');
     }));
   }
 

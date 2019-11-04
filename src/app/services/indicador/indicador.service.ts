@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 })
 export class IndicadorService {
   datos: any;
-  ip = 'http://172.25.13.91/API_COBRANZA/c_indicador/';
+  ip = 'http://127.0.0.1/API_COBRANZA/c_indicador/';
   apigetIndicador_uno: string = this.ip + 'getIndicador_uno';
   apigetIndicador_dos: string = this.ip + 'getIndicador_dos';
   constructor(public http: HttpClient) { }

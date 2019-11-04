@@ -422,6 +422,7 @@ export class PagarComponent implements OnInit {
     });
     Swal.showLoading();
     const id = $('#id_convenio').val();
+    const id_usuario = $('#id_socio').val();
     const cuota = [];
     $('[name="cuota[]"]:checked').each(function () {
       cuota.push($(this).val());
@@ -459,6 +460,14 @@ export class PagarComponent implements OnInit {
 
 
   btnHistorial(id) {
-    $('#historial').modal('show');
+    const dataString = 'id=' + id;
+    this.crearC.getHistorial(dataString).subscribe((data => {
+      $('#timeline').html(data);
+      $('#modal_form_usuario').modal('show');
+      $('#cabecera').html("HISTORIAL DEL REQUERIMIENTO #" + id);
+      $('#historial').modal('show');
+    }));
   }
+
+  
 }

@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
 export class CrearCService {
 
   datos: any;
-  ip = 'http://172.25.13.91/API_COBRANZA/c_convenio/';
+  ip = 'http://127.0.0.1/API_COBRANZA/c_convenio/';
   apigetConvenio: string = this.ip + 'getConvenio';
   apigetCountConvenio: string = this.ip + 'getCountConvenio';
   apiCreateConvenio: string = this.ip + 'createConvenio';
@@ -19,6 +19,7 @@ export class CrearCService {
   apigDeleteConvenioId: string = this.ip + 'DeleteConvenioId';
   apigPagarConvenioId: string = this.ip + 'PagarConvenioId';
   apigetMora: string = this.ip + 'getMora';
+  apigetHistorial: string = this.ip + 'getHistorial';
   constructor(public http: HttpClient) { }
 
   getConvenio(): Observable<any> {
@@ -126,6 +127,18 @@ export class CrearCService {
     };
     return this.http
       .get(this.apigetMora, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getHistorial(dato): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetHistorial, dato, httpOptions)
       .pipe(map(results => results));
   }
 }
