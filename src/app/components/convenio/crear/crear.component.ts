@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ClienteService } from '../../../services/cliente/cliente.service';
 import { CrearCService } from '../../../services/crear_c/crear-c.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
 import Swal from 'sweetalert2';
 declare var $: any;
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-crear',
@@ -11,6 +14,7 @@ declare var $: any;
   styleUrls: ['./crear.component.scss']
 })
 export class CrearComponent implements OnInit {
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
   userData: any[] = [];
   userList1: any;
   userList2: any;
@@ -26,11 +30,18 @@ export class CrearComponent implements OnInit {
   estado: any;
 
   constructor(private userServ: ClienteService,
-    private servServ: ServicioService,
-    private crearC: CrearCService) {
+              private servServ: ServicioService,
+              private crearC: CrearCService) {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.crearC.getConvenio().subscribe((data => {
       this.convenios = data;
       this.data = data;
+      Swal.close();
     }));
   }
 
@@ -52,7 +63,7 @@ export class CrearComponent implements OnInit {
       Object.assign(this.servicios, data);
     }));
 
-    $('#buscarSocioId').keydown(function (e) {
+    $('#buscarSocioId').keydown(function(e) {
       if (e.keyCode == 8) {
         $('id_socio').val('');
         $('buscarSocioId').val('');
@@ -62,7 +73,11 @@ export class CrearComponent implements OnInit {
       }
     });
 
-    $('#buscarServicioId').keydown(function (e) {
+    $('.datepicker').datepicker({
+      dateFormat: 'yy-mm-dd',
+    });
+
+    $('#buscarServicioId').keydown(function(e) {
       if (e.keyCode == 8) {
         $('id_servicio').val('');
         $('buscarServicioId').val('');
@@ -85,7 +100,7 @@ export class CrearComponent implements OnInit {
       $('#codigo_covenio').val('CNVN' + (numeros));
       const f = new Date();
       this.cabecera = 'REGISTRAR NUEVO CONVENIO';
-      $('#fecha_covenio').val(f.getDate() + '-' + (f.getMonth() + 1) + '-' + f.getFullYear());
+      $('#fecha_covenio').val(f.getFullYear() + '-' + (f.getMonth() + 1) + '-' + f.getDate());
       $('#ModalConvenio').modal('show');
     });
   }
@@ -225,7 +240,7 @@ export class CrearComponent implements OnInit {
       console.log('Monto no vacio');
       console.log($('#monto').val());
       const fechas = [];
-      const TuFecha = new Date();
+      const TuFecha = new Date($('#fecha_covenio').val());
       const dias = parseFloat($('#id_dias').val());
       let cuotas: number;
       if (dias === 7) {
@@ -341,7 +356,7 @@ export class CrearComponent implements OnInit {
   }
 
   bordes() {
-    setTimeout(function () {
+    setTimeout(function() {
       $('.border').css('border', '');
     }, 2000);
   }
@@ -376,7 +391,7 @@ export class CrearComponent implements OnInit {
     this.estado = true;
     this.cabecera = 'EDITAR CONVENIO #' + id;
     $('#ModalConvenio').modal('show');
-    this.crearC.getConvenioId({ id: id }).subscribe((data => {
+    this.crearC.getConvenioId({ id }).subscribe((data => {
       console.log(data);
       const user = data[0];
       $('#id_convenio').val(user.id_convenio);
@@ -394,7 +409,7 @@ export class CrearComponent implements OnInit {
       $('#codigo_covenio').val(user.codigo);
       $('#fecha_covenio').val(user.fecha);
       $('#id_periodo').val(user.id_periodo);
-      this.crearC.getConveniodetalleId({ id: id }).subscribe((data => {
+      this.crearC.getConveniodetalleId({ id }).subscribe((data => {
         Swal.close();
         let i;
         for (i = 0; i < data.length; i++) {
@@ -515,7 +530,7 @@ export class CrearComponent implements OnInit {
           text: 'Espere por favor...'
         });
         Swal.showLoading();
-        this.crearC.DeleteConvenioId({ id: id }).subscribe((data => {
+        this.crearC.DeleteConvenioId({ id }).subscribe((data => {
           Swal.close();
           if (data === true) {
             this.getConvenio();
@@ -541,9 +556,23 @@ export class CrearComponent implements OnInit {
     this.crearC.getHistorial(dataString).subscribe((data => {
       $('#timeline').html(data);
       $('#modal_form_usuario').modal('show');
-      $('#cabecera').html("HISTORIAL DEL REQUERIMIENTO #" + id);
+      $('#cabecera').html('HISTORIAL DEL REQUERIMIENTO #' + id);
       $('#historial').modal('show');
     }));
+  }
+
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de convenios creados.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
   }
 
 }

@@ -11,9 +11,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Socio</label>
-                                <input uppercase (keyup)="buscarPorSocio($event)" type="text" class="form-control"
-                                    id="buscarSocio" aria-describedby="emailHelp" style="text-transform: uppercase;"
-                                    placeholder="Busqueda por usuario">
+                                <input uppercase (keyup)="buscarPorSocio($event)" type="text" class="form-control" id="buscarSocio" aria-describedby="emailHelp" style="text-transform: uppercase;" placeholder="Busqueda por usuario">
                                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                     else.</small> -->
                             </div>
@@ -21,8 +19,7 @@
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Código</label>
-                                <input uppercase (keyup)="buscarPorCodigo($event)" type="text" class="form-control"
-                                    id="buscarCodigo" aria-describedby="emailHelp" placeholder="Busqueda por código">
+                                <input uppercase (keyup)="buscarPorCodigo($event)" type="text" class="form-control" id="buscarCodigo" aria-describedby="emailHelp" placeholder="Busqueda por código">
                                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                     else.</small> -->
                             </div>
@@ -44,18 +41,18 @@
                     <div class="row">
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
-                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button>
+                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button>
                             </div>
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button id="btn_pdf" class="btn btn-danger btn-block">Descargar PDF</button>
+                                <button (click)="exportarPdf()" id="btn_pdf" class="btn btn-danger btn-block">Descargar
+                                    PDF</button>
                             </div>
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
+                                <button (click)="exportarExcel()" id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
                             </div>
                         </div>
                     </div>
@@ -67,9 +64,8 @@
             <div class="card-header bg-primary text-white">
                 <h4>Listado de convenios</h4>
             </div>
-            <div class="card-body">
-                <table id="tabla_usuarios" class="table table-bordered table-condensed table-hover responsive"
-                    cellspacing="0" width="100%">
+            <div class="card-body" #TABLE>
+                <table #table id="tabla_usuarios" class="table table-bordered table-condensed table-hover responsive" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th class="text-center" width="5%">Nº</th>
@@ -92,25 +88,19 @@
                             <td>S/. {{ convenio.monto }}</td>
                             <td>
                                 <div class="form-group">
-                                    <span *ngIf="convenio.id_estado === '4'"
-                                        class="badge badge-primary">{{ convenio.estado }}</span>
-                                    <span *ngIf="convenio.id_estado === '5'"
-                                        class="badge badge-danger">{{ convenio.estado }}</span>
-                                    <span *ngIf="convenio.id_estado === '6'"
-                                        class="badge badge-success">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '4'" class="badge badge-primary">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '5'" class="badge badge-danger">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '6'" class="badge badge-success">{{ convenio.estado }}</span>
                                 </div>
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button *ngIf="convenio.id_estado === '4'" (click)="btnEditar(convenio.id_servicio)"
-                                        class="btn"><i class="fa fa-edit fa-2x"></i>
+                                    <button *ngIf="convenio.id_estado === '4'" (click)="btnEditar(convenio.id_convenio)" class="btn"><i class="fa fa-edit fa-2x"></i>
                                     </button>
-                                    <button *ngIf="convenio.id_estado === '4'"
-                                        (click)="btnEliminar(convenio.id_servicio)" class="btn"><i
+                                    <button *ngIf="convenio.id_estado === '4'" (click)="btnEliminar(convenio.id_convenio)" class="btn"><i
                                             class="fa fa-trash fa-2x"></i>
                                     </button>
-                                    <button *ngIf="convenio.id_estado === '5' || convenio.id_estado === '6'"
-                                        (click)="btnHistorial(convenio.id_servicio)" class="btn"><i
+                                    <button *ngIf="convenio.id_estado === '5' || convenio.id_estado === '6'" (click)="btnHistorial(convenio.id_convenio)" class="btn"><i
                                             class="fa fa-hourglass-half fa-2x"></i>
                                     </button>
                                 </div>
@@ -148,9 +138,7 @@
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_convenio">
                                             <input type="hidden" id="id_socio">
-                                            <input (keyup)="buscarSocio($event)" fullWidth
-                                                style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete border" id="buscarSocioId" type="text">
+                                            <input (keyup)="buscarSocio($event)" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control autocomplete border" id="buscarSocioId" type="text">
                                             <span class="help-block"></span>
                                         </div>
                                     </div>
@@ -160,9 +148,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">Código de
                                             socio</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="codigo" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="codigo" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -171,9 +157,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">N° de
                                             documento</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="documento" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="documento" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -181,9 +165,7 @@
                                     <div class="form-group">
                                         <label style="width: 100%" class="control-label col-md-12">Puesto</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="puesto" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="puesto" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -195,10 +177,7 @@
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_servicio">
                                             <input type="hidden" id="id_dias">
-                                            <input (keyup)="buscarServicio($event)" fullWidth
-                                                style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete border" id="buscarServicioId"
-                                                type="text">
+                                            <input (keyup)="buscarServicio($event)" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control autocomplete border" id="buscarServicioId" type="text">
                                             <span class="help-block"></span>
                                         </div>
                                     </div>
@@ -208,9 +187,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">Código de
                                             servicio</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="servicio" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="servicio" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -218,9 +195,7 @@
                                     <div class="form-group">
                                         <label style="width: 100%" class="control-label col-md-12">Monto</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="monto" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="monto" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -228,9 +203,7 @@
                                     <div class="form-group">
                                         <label style="width: 100%" class="control-label col-md-12">Periodo</label>
                                         <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="periodo" type="text"> <span
-                                                class="help-block"></span>
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" id="periodo" type="text"> <span class="help-block"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -242,8 +215,7 @@
                                             convenio</label>
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_convenio">
-                                            <input fullWidth style="text-transform: uppercase" placeholder="" required
-                                                readonly class="form-control" id="codigo_covenio" type="text">
+                                            <input fullWidth style="text-transform: uppercase" placeholder="" required readonly class="form-control" id="codigo_covenio" type="text">
                                             <span class="help-block"></span>
                                         </div>
                                     </div>
@@ -253,8 +225,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">Fecha de
                                             convenio</label>
                                         <div class="col-md-12">
-                                            <input fullWidth style="text-transform: uppercase" placeholder="" required
-                                                readonly class="form-control" id="fecha_covenio" type="text">
+                                            <input readonly fullWidth style="text-transform: uppercase" placeholder="" required class="form-control datepicker" id="fecha_covenio" type="text">
                                             <span class="help-block"></span>
                                         </div>
                                     </div>
@@ -264,8 +235,7 @@
                                         <label style="width: 100%" class="control-label col-md-12">Periodo en
                                             meses</label>
                                         <div class="col-md-12">
-                                            <select (change)="traer_detalle()" class="form-control border"
-                                                name="id_periodo" id="id_periodo">
+                                            <select (change)="traer_detalle()" class="form-control border" name="id_periodo" id="id_periodo">
                                                 <option value="" selected disabled>.: SELECCIONE :.</option>
                                                 <option value="1">1 Mes</option>
                                                 <option value="2">2 Meses</option>
@@ -293,9 +263,7 @@
                                     <br>
                                 </div>
                                 <div class="col-md-12">
-                                    <table id="tabla_detalle"
-                                        class="table table-hover table-condensed table-striped tabla_detalle"
-                                        style="width: 100%; cellspacing: 0">
+                                    <table id="tabla_detalle" class="table table-hover table-condensed table-striped tabla_detalle" style="width: 100%; cellspacing: 0">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" width="5%">Nº</th>
@@ -313,16 +281,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
-                    <button *ngIf="!estado" id="boton_multiuso" (click)="agregarConvenio()" type="button"
-                        class="btn btn-success">REGISTRAR</button>
-                    <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button"
-                        class="btn btn-success">ACTUALIZAR</button>
+                    <button *ngIf="!estado" id="boton_multiuso" (click)="agregarConvenio()" type="button" class="btn btn-success">REGISTRAR</button>
+                    <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button" class="btn btn-success">ACTUALIZAR</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" id="historial" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header bg-primary" style="color: white;font-weight: bold;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

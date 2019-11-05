@@ -11,9 +11,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Socio</label>
-                                <input uppercase (keyup)="buscarPorSocio($event)" type="text" class="form-control"
-                                    id="buscarSocio" aria-describedby="emailHelp" style="text-transform: uppercase;"
-                                    placeholder="Busqueda por usuario">
+                                <input uppercase (keyup)="buscarPorSocio($event)" type="text" class="form-control" id="buscarSocio" aria-describedby="emailHelp" style="text-transform: uppercase;" placeholder="Busqueda por usuario">
                                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                     else.</small> -->
                             </div>
@@ -21,8 +19,7 @@
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Código</label>
-                                <input uppercase (keyup)="buscarPorCodigo($event)" type="text" class="form-control"
-                                    id="buscarCodigo" aria-describedby="emailHelp" placeholder="Busqueda por código">
+                                <input uppercase (keyup)="buscarPorCodigo($event)" type="text" class="form-control" id="buscarCodigo" aria-describedby="emailHelp" placeholder="Busqueda por código">
                                 <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                     else.</small> -->
                             </div>
@@ -50,12 +47,13 @@
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button id="btn_pdf" class="btn btn-danger btn-block">Descargar PDF</button>
+                                <button (click)="exportarPdf()" id="btn_pdf" class="btn btn-danger btn-block">Descargar
+                                    PDF</button>
                             </div>
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
+                                <button (click)="exportarExcel()" id="btn_excel" class="btn btn-success btn-block">Descargar EXCEL</button>
                             </div>
                         </div>
                     </div>
@@ -67,9 +65,8 @@
             <div class="card-header bg-primary text-white">
                 <h4>Listado de convenios</h4>
             </div>
-            <div class="card-body">
-                <table id="tabla_usuarios" class="table table-bordered table-condensed table-hover responsive"
-                    cellspacing="0" width="100%">
+            <div class="card-body" #TABLE>
+                <table #table id="tabla_usuarios" class="table table-bordered table-condensed table-hover responsive" cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th class="text-center" width="5%">Nº</th>
@@ -97,7 +94,7 @@
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button (click)="btnHistorial(convenio.id_servicio)" class="btn"><i
+                                    <button (click)="btnDeuda(convenio.id_convenio)" class="btn"><i
                                             class="fa fa-bullhorn fa-2x"></i>
                                     </button>
                                 </div>
@@ -108,206 +105,26 @@
             </div>
         </div>
     </section>
-
-    <div id="ModalConvenio" class="modal fade">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="deuda" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header bg-primary">
-                    <h4 class="modal-title text-center text-white">{{ cabecera }}</h4>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span class="text-white" aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" align="center">
-                    <div class="row" align="center">
-                        <div c lass="col-md-12" align="center">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h4 class="page-header">
-                                        <i class="fa fa-check-circle-o"></i><strong> DATOS DEL CONVENIO</strong>
-                                    </h4>
-                                    <br>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Código de
-                                            socio</label>
-                                        <div class="col-md-12">
-                                            <input type="hidden" id="id_convenio">
-                                            <input type="hidden" id="id_socio">
-                                            <input (keyup)="buscarSocio($event)" fullWidth readonly
-                                                style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete border" id="buscarSocioId" type="text">
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Nombres
-                                            completos</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="nombres" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">N° de
-                                            documento</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="documento" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Puesto</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="puesto" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Código de
-                                            servicio</label>
-                                        <div class="col-md-12">
-                                            <input type="hidden" id="id_servicio">
-                                            <input type="hidden" id="id_dias">
-                                            <input (keyup)="buscarServicio($event)" fullWidth readonly
-                                                style="text-transform: uppercase" placeholder="" required
-                                                class="form-control autocomplete border" id="buscarServicioId"
-                                                type="text">
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Servicio</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="nombre" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Monto</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="monto" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Periodo</label>
-                                        <div class="col-md-12">
-                                            <input readonly fullWidth style="text-transform: uppercase" placeholder=""
-                                                required class="form-control" id="periodo" type="text"> <span
-                                                class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Código de
-                                            convenio</label>
-                                        <div class="col-md-12">
-                                            <input type="hidden" id="id_convenio">
-                                            <input fullWidth style="text-transform: uppercase" placeholder="" required
-                                                readonly class="form-control" id="codigo_covenio" type="text">
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Fecha de
-                                            convenio</label>
-                                        <div class="col-md-12">
-                                            <input fullWidth style="text-transform: uppercase" placeholder="" required
-                                                readonly class="form-control" id="fecha_covenio" type="text">
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label style="width: 100%" class="control-label col-md-12">Periodo en
-                                            meses</label>
-                                        <div class="col-md-12">
-                                            <select (change)="traer_detalle()" class="form-control border" disabled
-                                                name="id_periodo" id="id_periodo">
-                                                <option value="" selected disabled>.: SELECCIONE :.</option>
-                                                <option value="1">1 Mes</option>
-                                                <option value="2">2 Meses</option>
-                                                <option value="3">3 Meses</option>
-                                                <option value="4">4 Meses</option>
-                                                <option value="5">5 Meses</option>
-                                                <option value="6">6 Meses</option>
-                                                <option value="7">7 Meses</option>
-                                                <option value="8">8 Meses</option>
-                                                <option value="9">9 Meses</option>
-                                                <option value="10">10 Meses</option>
-                                                <option value="11">11 Meses</option>
-                                                <option value="12">12 Meses</option>
-                                            </select>
-                                            <span class="help-block"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h4 class="page-header">
-                                        <i class="fa fa-check-circle-o"></i><strong> DETALLE DE LAS CUOTAS</strong>
-                                    </h4>
-                                    <br>
-                                </div>
-                                <div class="col-md-12">
-                                    <table id="tabla_detalle"
-                                        class="table table-hover table-condensed table-striped tabla_detalle"
-                                        style="width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" width="5%">Nº</th>
-                                                <th class="text-center" width="10%">Fecha</th>
-                                                <th class="text-center" width="10%">Monto</th>
-                                                <th class="text-center" width="10%">Estado</th>
-                                                <th class="text-center" width="10%">Pago</th>
-                                                <th class="text-center" width="10%">Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="text-center">
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                <div class="card text-center">
+                    <div class="card-header">
+                        Enviar notificación
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
-                    <button *ngIf="!estado" id="boton_multiuso" (click)="agregarConvenio()" type="button"
-                        class="btn btn-success">REGISTRAR</button>
-                    <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button"
-                        class="btn btn-success">PAGAR</button>
+                    <div class="card-body">
+                        <h5 class="card-title">Ingrese el correo del socio</h5>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">@</span>
+                            </div>
+                            <input id="correo" readonly type="text" class="form-control" placeholder="Correo electronico" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                        <a (click)="enviarCorreo()" class="btn btn-success">Enviar correo</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Cuota vencida
+                    </div>
                 </div>
             </div>
         </div>

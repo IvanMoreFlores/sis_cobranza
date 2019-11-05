@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { LoginService } from '../../../services/login/login.service';
 import { UsuarioService } from '../../../services/usuario/usuario.service';
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 declare var $: any;
 
 @Component({
@@ -11,6 +15,7 @@ declare var $: any;
   styleUrls: ['./usuario.component.scss']
 })
 export class UsuarioComponent implements OnInit {
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
   dtOptions: any = {};
   usuarios: any;
   roles: any;
@@ -34,11 +39,12 @@ export class UsuarioComponent implements OnInit {
       id_documento: ['', [Validators.required]],
       numero_doc: ['', [Validators.required, Validators.pattern(/^[0-9]\d{7,12}$/)]],
       id_sexo: ['', [Validators.required]],
-      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
       user: ['', [Validators.required]],
       password: ['', [Validators.required]],
+      correo: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -52,11 +58,54 @@ export class UsuarioComponent implements OnInit {
   }
 
 
+  soloLetras(e) {
+    const key = e.keyCode || e.which;
+    const tecla = String.fromCharCode(key).toLowerCase();
+    const letras = ' áéíóúabcdefghijklmnñopqrstuvwxyz';
+    const especiales: any = '8-37-39-46';
+    let tecla_especial = false;
+    for (const i in especiales) {
+      if (key === especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) === -1 && !tecla_especial) {
+      return false;
+    }
+  }
+
+  soloNumeros(event) {
+    if (event.shiftKey) {
+      event.preventDefault();
+    }
+    if (event.keyCode === 46 || event.keyCode === 8) {
+    } else {
+      if (event.keyCode < 95) {
+        if (event.keyCode < 48 || event.keyCode > 57) {
+          event.preventDefault();
+        }
+      } else {
+        if (event.keyCode < 96 || event.keyCode > 105) {
+          event.preventDefault();
+        }
+      }
+    }
+  }
+
+
   listarUser() {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.usuarios = [];
     this.userServ.getUser().subscribe((data => {
       this.usuarios = data;
       this.data = data;
+      Swal.close();
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
     }));
@@ -117,6 +166,7 @@ export class UsuarioComponent implements OnInit {
     $('#apellido_mat').val('');
     $('#user').val('');
     $('#password').val('');
+    $('#correo').val('');
   }
 
 
@@ -177,6 +227,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   async btnEditar(id) {
+    await this.limpiar();
     this.id = id;
     this.estado = true;
     await this.getRol();
@@ -197,6 +248,7 @@ export class UsuarioComponent implements OnInit {
       this.formularioUsuario.controls.apellido_mat.setValue(user.apellido_mat);
       this.formularioUsuario.controls.user.setValue(user.user);
       this.formularioUsuario.controls.password.setValue(user.password);
+      this.formularioUsuario.controls.correo.setValue(user.correo);
     }));
   }
 
@@ -311,6 +363,20 @@ export class UsuarioComponent implements OnInit {
       this.codigo = 'USER' + numeros;
       this.formularioUsuario.controls.codigo.setValue(this.codigo);
     });
+  }
+
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de Usuarios.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
   }
 
 }

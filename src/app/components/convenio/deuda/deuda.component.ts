@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ClienteService } from '../../../services/cliente/cliente.service';
 import { CrearCService } from '../../../services/crear_c/crear-c.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
 import Swal from 'sweetalert2';
 declare var $: any;
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-deuda',
@@ -11,6 +14,7 @@ declare var $: any;
   styleUrls: ['./deuda.component.scss']
 })
 export class DeudaComponent implements OnInit {
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
 
   userData: any[] = [];
   userList1: any;
@@ -30,9 +34,16 @@ export class DeudaComponent implements OnInit {
   constructor(private userServ: ClienteService,
     private servServ: ServicioService,
     private crearC: CrearCService) {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.crearC.getMora().subscribe((data => {
       this.convenios = data;
       this.data = data;
+      Swal.close();
     }));
   }
 
@@ -456,8 +467,46 @@ export class DeudaComponent implements OnInit {
     }
   }
 
+  enviarCorreo() {
+    Swal.fire({
+      timer: 3000,
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    }).then((data) => {
+      Swal.fire(
+        'Enviado',
+        'Se notifico correctamente al socio sobre su deuda',
+        'success'
+      );
+      $('#deuda').modal('hide');
+    });
+    Swal.showLoading();
+  }
 
-  btnHistorial(id) {
 
+  btnDeuda(id) {
+    $('#correo').val('');
+    // alert(id);
+    $('#deuda').modal('show');
+    this.crearC.getConvenioId({ id }).subscribe((data => {
+      console.log(data);
+      const user = data[0];
+      $('#correo').val(user.correo);
+    }));
+  }
+
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de deudores.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
   }
 }

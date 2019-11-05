@@ -23,41 +23,44 @@ export class ConfigComponent implements OnInit {
   }
 
   btnUpdate() {
-    Swal.fire({
-      allowOutsideClick: false,
-      type: 'info',
-      text: 'Espere por favor...'
-    });
-    Swal.showLoading();
-    if (this.contra !== this.cofircontra) {
-      Swal.close();
-      Swal.fire({
-        type: 'error',
-        title: 'Mensaje',
-        text: 'La contraseña no coincide'
-      });
+
+    if (this.contra === '' || this.cofircontra === '') {
+      alert('Complete los campos');
     } else {
-      if (this.contra.length > 8) {
-        this.loginServi.UserUpdate({ id: localStorage.getItem('id'), password: this.contra }).subscribe((data => {
-          Swal.close();
-          console.log(data);
-          if (data === true) {
-            Swal.fire({
-              type: 'success',
-              title: 'Mensaje',
-              text: 'La contraseña se actualizo correctamente'
-            });
-          }
-        }));
-      } else {
+      Swal.fire({
+        allowOutsideClick: false,
+        type: 'info',
+        text: 'Espere por favor...'
+      });
+      Swal.showLoading();
+      if (this.contra !== this.cofircontra) {
+        Swal.close();
         Swal.fire({
           type: 'error',
           title: 'Mensaje',
-          text: 'La contraseña muy corta minimo 8 caracteres'
+          text: 'La contraseña no coincide'
         });
+      } else {
+        if (this.contra.length > 8) {
+          this.loginServi.UserUpdate({ id: localStorage.getItem('id'), password: this.contra }).subscribe((data => {
+            Swal.close();
+            console.log(data);
+            if (data === true) {
+              Swal.fire({
+                type: 'success',
+                title: 'Mensaje',
+                text: 'La contraseña se actualizo correctamente'
+              });
+            }
+          }));
+        } else {
+          Swal.fire({
+            type: 'error',
+            title: 'Mensaje',
+            text: 'La contraseña muy corta minimo 8 caracteres'
+          });
+        }
       }
-
-
     }
   }
 

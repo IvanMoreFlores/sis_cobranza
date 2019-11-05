@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ClienteService } from '../../../services/cliente/cliente.service';
 import { CrearCService } from '../../../services/crear_c/crear-c.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
 import Swal from 'sweetalert2';
 declare var $: any;
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-pagar',
@@ -11,7 +17,8 @@ declare var $: any;
   styleUrls: ['./pagar.component.scss']
 })
 export class PagarComponent implements OnInit {
-
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
+  pdfObj = null;
   userData: any[] = [];
   userList1: any;
   userList2: any;
@@ -30,9 +37,16 @@ export class PagarComponent implements OnInit {
   constructor(private userServ: ClienteService,
     private servServ: ServicioService,
     private crearC: CrearCService) {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.crearC.getConvenio().subscribe((data => {
       this.convenios = data;
       this.data = data;
+      Swal.close();
     }));
   }
 
@@ -335,7 +349,7 @@ export class PagarComponent implements OnInit {
   }
 
   limpiar() {
-    $('#tabla_detalle tbody').empty();
+    // $('#tabla_detalle tbody').empty();
     $('#id_socio').val('');
     $('#buscarSocioId').val('');
     $('#nombres').val('');
@@ -383,34 +397,52 @@ export class PagarComponent implements OnInit {
       $('#codigo_covenio').val(user.codigo);
       $('#fecha_covenio').val(user.fecha);
       $('#id_periodo').val(user.id_periodo);
-      this.crearC.getConveniodetalleId({ id }).subscribe((data => {
+      this.crearC.getConveniodetalleId({ id }).subscribe((dato => {
         Swal.close();
-        let i;
-        let estado = '';
-        let estado_ = '';
-        let radio = '';
-        let botton = '';
-        for (i = 0; i < data.length; i++) {
-          if (data[i].id_estado === '8') {
-            estado = 'badge-danger';
-            estado_ = 'DEUDA';
-            radio = '';
-            botton = 'fa-eye-slash';
-          } else {
-            estado = 'badge-success';
-            estado_ = 'PAGADO';
-            radio = 'disabled="true" checked ';
-            botton = 'fa-print';
-          }
-          const nFilas = $('#tabla_detalle tr').length;
-          $('#tabla_detalle > tbody').append('<tr><td>' + nFilas +
-            '</td><td>' + data[i].fecha +
-            '</td><td>' + data[i].monto +
-            '</td><td><div class="form-group"><button class="badge ' + estado + '"> ' + estado_ + ' </button></div>' +
-            '</td><td><input ' + radio + ' name="cuota[]" type="checkbox" value="' + data[i].id_detalle + '"></td>' +
-            '</td><td><div class="form-group"><button class="btn"><i class="fa ' + botton + '"></i></button></div></tr>');
-        }
+        this.detalles = dato;
+        console.log(this.detalles);
       }));
+    }));
+  }
+
+
+  getImprimir(id) {
+    const dataString = 'id=' + id;
+    this.crearC.getImprimir(dataString).subscribe((dato => {
+      const data = dato[0];
+      console.log(data);
+      let docDefinition = {
+        content: [
+          { text: 'FECHA', style: 'header' },
+          { text: new Date().toTimeString(), alignment: 'right' },
+          { text: 'CODIGO', style: 'subheader' },
+          { text: data.c_convenio },
+          { text: 'CODIGO DE SOCIO', style: 'subheader' },
+          { text: data.c_convenio },
+          { text: data.socio, style: 'subheader' },
+          { text: 'SOCIO', style: 'subheader' },
+          { text: 's./ ' + data.monto, style: 'subheader' },
+          { text: 'MONTO', style: 'subheader' },
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+          },
+          subheader: {
+            fontSize: 14,
+            bold: true,
+            margin: [0, 15, 0, 0]
+          },
+          story: {
+            italic: true,
+            alignment: 'center',
+            width: '50%',
+          }
+        }
+      };
+      this.pdfObj = pdfMake.createPdf(docDefinition);
+      this.pdfObj.download();
     }));
   }
 
@@ -428,7 +460,8 @@ export class PagarComponent implements OnInit {
       cuota.push($(this).val());
     });
     const dataString = 'id=' + id
-      + '&cuota=' + cuota;
+      + '&cuota=' + cuota
+      + '&id_usuario=' + id_usuario;
     console.log(cuota.length);
     if (cuota.length === 0) {
       Swal.close();
@@ -464,10 +497,24 @@ export class PagarComponent implements OnInit {
     this.crearC.getHistorial(dataString).subscribe((data => {
       $('#timeline').html(data);
       $('#modal_form_usuario').modal('show');
-      $('#cabecera').html("HISTORIAL DEL REQUERIMIENTO #" + id);
+      $('#cabecera').html('HISTORIAL DEL REQUERIMIENTO #' + id);
       $('#historial').modal('show');
     }));
   }
 
-  
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de convenios en proceso.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
+  }
+
+
 }

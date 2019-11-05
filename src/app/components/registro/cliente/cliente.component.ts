@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import Swal from 'sweetalert2';
-import { LoginService } from '../../../services/login/login.service';
+import * as XLSX from 'xlsx';
 import { ClienteService } from '../../../services/cliente/cliente.service';
+import { LoginService } from '../../../services/login/login.service';
 declare var $: any;
 
 @Component({
@@ -11,6 +14,8 @@ declare var $: any;
   styleUrls: ['./cliente.component.scss']
 })
 export class ClienteComponent implements OnInit {
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
+  @ViewChild('table', { static: false }) pdfTable: ElementRef;
   dtOptions: any = {};
   usuarios: any;
   roles: any;
@@ -26,8 +31,8 @@ export class ClienteComponent implements OnInit {
   data: any = [];
   formularioUsuario: FormGroup;
   constructor(private userServ: ClienteService,
-    private loginServ: LoginService,
-    public fb: FormBuilder) {
+              private loginServ: LoginService,
+              public fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
@@ -36,16 +41,17 @@ export class ClienteComponent implements OnInit {
       id_documento: ['', [Validators.required]],
       numero_doc: ['', [Validators.required, Validators.pattern(/^[0-9]\d{7,12}$/)]],
       id_sexo: ['', [Validators.required]],
-      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
-      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]*$/)]],
+      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
       user: ['', [Validators.required]],
       password: ['', [Validators.required]],
+      correo: ['', [Validators.required, Validators.email]],
     });
   }
 
   ngOnInit() {
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
       // Button PDF
@@ -54,11 +60,54 @@ export class ClienteComponent implements OnInit {
   }
 
 
+  soloLetras(e) {
+    const key = e.keyCode || e.which;
+    const tecla = String.fromCharCode(key).toLowerCase();
+    const letras = ' áéíóúabcdefghijklmnñopqrstuvwxyz';
+    const especiales: any = '8-37-39-46';
+    let tecla_especial = false;
+    for (const i in especiales) {
+      if (key === especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) === -1 && !tecla_especial) {
+      return false;
+    }
+  }
+
+  soloNumeros(event) {
+    if (event.shiftKey) {
+      event.preventDefault();
+    }
+    if (event.keyCode === 46 || event.keyCode === 8) {
+    } else {
+      if (event.keyCode < 95) {
+        if (event.keyCode < 48 || event.keyCode > 57) {
+          event.preventDefault();
+        }
+      } else {
+        if (event.keyCode < 96 || event.keyCode > 105) {
+          event.preventDefault();
+        }
+      }
+    }
+  }
+
+
   listarUser() {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.usuarios = [];
     this.userServ.getCliente().subscribe((data => {
       this.usuarios = data;
       this.data = data;
+      Swal.close();
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
     }));
@@ -70,9 +119,9 @@ export class ClienteComponent implements OnInit {
 
   tipo_doc() {
     if ($('#id_documento').val() === '1') {
-      $("#numero_doc").attr('maxlength', '8');
+      $('#numero_doc').attr('maxlength', '8');
     } else {
-      $("#numero_doc").attr('maxlength', '12');
+      $('#numero_doc').attr('maxlength', '12');
     }
   }
 
@@ -119,6 +168,7 @@ export class ClienteComponent implements OnInit {
     $('#apellido_mat').val('');
     $('#user').val('');
     $('#password').val('');
+    $('#correo').val('');
   }
 
 
@@ -177,6 +227,7 @@ export class ClienteComponent implements OnInit {
   }
 
   async btnEditar(id) {
+    await this.limpiar();
     console.log(id);
     this.id = id;
     this.estado = true;
@@ -199,6 +250,7 @@ export class ClienteComponent implements OnInit {
       this.formularioUsuario.controls.apellido_mat.setValue(user.apellido_mat);
       this.formularioUsuario.controls.user.setValue(user.user);
       this.formularioUsuario.controls.password.setValue(user.password);
+      this.formularioUsuario.controls.correo.setValue(user.correo);
     }));
   }
 
@@ -313,6 +365,20 @@ export class ClienteComponent implements OnInit {
       this.codigo = 'CLNT' + numeros;
       this.formularioUsuario.controls.codigo.setValue(this.codigo);
     });
+  }
+
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de Clientes.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
   }
 
 }

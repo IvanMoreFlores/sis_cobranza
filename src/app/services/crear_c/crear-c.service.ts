@@ -20,6 +20,7 @@ export class CrearCService {
   apigPagarConvenioId: string = this.ip + 'PagarConvenioId';
   apigetMora: string = this.ip + 'getMora';
   apigetHistorial: string = this.ip + 'getHistorial';
+  apigetImprimir: string = this.ip + 'getImprimir';
   constructor(public http: HttpClient) { }
 
   getConvenio(): Observable<any> {
@@ -139,6 +140,18 @@ export class CrearCService {
     };
     return this.http
       .post(this.apigetHistorial, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getImprimir(dato): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetImprimir, dato, httpOptions)
       .pipe(map(results => results));
   }
 }

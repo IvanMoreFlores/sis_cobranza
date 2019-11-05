@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { IndicadorService } from '../../../services/indicador/indicador.service';
 import { Chart } from 'chart.js';
 declare var $: any;
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-indicador-dos',
@@ -39,12 +40,18 @@ export class IndicadorDosComponent implements OnInit {
   }
 
   btn_buscar() {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.n_convenio_g = [];
     this.fecha_g = [];
-    // this.n_convenio = 0;
-    // this.monto = 0;
-    // this.monto_deuda = 0;
-    // this.indicador = 0;
+    this.n_convenio = 0;
+    this.monto = 0;
+    this.monto_deuda = 0;
+    this.indicador = 0;
     // $('#contenedor_grafico').append("<canvas #barCanvas id='barCanvas'></canvas>");
     $('#div_tabla').show();
     $('#div_grafica').hide();
@@ -62,14 +69,18 @@ export class IndicadorDosComponent implements OnInit {
           data.forEach(element => {
             this.n_convenio_g.push(element.n_convenio);
             this.fecha_g.push(element.fecha);
-            this.n_convenio = + parseInt(element.n_convenio);
-            this.monto = + parseInt(element.monto);
-            this.monto_deuda = + parseInt(element.monto_deuda);
+            this.monto_g.push(element.monto);
+            this.monto_deuda_g.push(element.monto_deuda);
+            this.n_convenio = this.n_convenio + parseInt(element.n_convenio);
+            this.monto = this.monto + parseInt(element.monto);
+            this.monto_deuda = this.monto_deuda + parseInt(element.monto_deuda);
           });
+          Swal.close();
           console.log(this.n_convenio_g);
           console.log(this.fecha_g);
           this.indicador = ((this.monto_deuda * 30) / this.monto).toFixed(2);
         } else {
+          Swal.close();
           alert('No se encontro datos para mostrar');
         }
       }));
@@ -88,10 +99,17 @@ export class IndicadorDosComponent implements OnInit {
         labels: this.fecha_g,
         datasets: [
           {
-            label: '# Cantidad de cuentas por cobrar',
-            data: this.n_convenio_g,
+            label: 'Servicios totales',
+            data: this.monto_g,
             borderColor: '#df382c',
             backgroundColor: '#df382c',
+            fill: true
+          },
+          {
+            label: 'Cuentas por cobrar por dias al año',
+            data: this.monto_deuda_g,
+            borderColor: 'rgb(6, 124, 45)',
+            backgroundColor: 'rgb(6, 124, 45)',
             fill: true
           }
         ]

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { LoginService } from '../../../services/login/login.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
 declare var $: any;
+import * as XLSX from 'xlsx';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 @Component({
   selector: 'app-servicio',
@@ -11,6 +14,7 @@ declare var $: any;
   styleUrls: ['./servicio.component.scss']
 })
 export class ServicioComponent implements OnInit {
+  @ViewChild('TABLE', { static: false }) table: ElementRef;
   dtOptions: any = {};
   servicios: any;
   roles: any;
@@ -49,10 +53,17 @@ export class ServicioComponent implements OnInit {
   }
 
   listarServicio() {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
     this.servicios = [];
     this.userServ.getServicio().subscribe((data => {
       this.servicios = data;
       this.data = data;
+      Swal.close();
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
     }));
@@ -233,5 +244,19 @@ export class ServicioComponent implements OnInit {
         }));
       }
     });
+  }
+
+  exportarExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    /* save to file */
+    XLSX.writeFile(wb, 'Listado de Servicios.xlsx');
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF();
+    doc.autoTable({ html: '#tabla_usuarios' });
+    doc.save('table.pdf');
   }
 }
