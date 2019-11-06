@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ClienteService } from '../../../services/cliente/cliente.service';
-import { CrearCService } from '../../../services/crear_c/crear-c.service';
-import { ServicioService } from '../../../services/servicio/servicio.service';
-import Swal from 'sweetalert2';
-declare var $: any;
-import * as XLSX from 'xlsx';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import { ClienteService } from '../../../services/cliente/cliente.service';
+import { CrearCService } from '../../../services/crear_c/crear-c.service';
+import { ServicioService } from '../../../services/servicio/servicio.service';
+declare var $: any;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -382,6 +382,7 @@ export class PagarComponent implements OnInit {
     this.crearC.getConvenioId({ id }).subscribe((data => {
       console.log(data);
       const user = data[0];
+      this.detalle = data[0];
       $('#id_convenio').val(user.id_convenio);
       $('#id_socio').val(user.id_socio);
       $('#buscarSocioId').val(user.codigo_socio);
@@ -411,34 +412,53 @@ export class PagarComponent implements OnInit {
     this.crearC.getImprimir(dataString).subscribe((dato => {
       const data = dato[0];
       console.log(data);
-      let docDefinition = {
+      const docDefinition = {
+        pageSize: {
+          width: 500,
+          height: 350
+        },
         content: [
-          { text: 'FECHA', style: 'header' },
-          { text: new Date().toTimeString(), alignment: 'right' },
-          { text: 'CODIGO', style: 'subheader' },
-          { text: data.c_convenio },
-          { text: 'CODIGO DE SOCIO', style: 'subheader' },
-          { text: data.c_convenio },
-          { text: data.socio, style: 'subheader' },
-          { text: 'SOCIO', style: 'subheader' },
-          { text: 's./ ' + data.monto, style: 'subheader' },
-          { text: 'MONTO', style: 'subheader' },
+          {
+            style: 'tableExample',
+            table: {
+              widths: ['auto', 'auto'],
+              body: [
+                ['CODIGO DE CONVENIO', data.c_convenio],
+                ['FECHA DE PAGO', data.fecha_pago],
+                ['NOMBRES DE SOCIO', data.socio],
+                ['CODIGO DE SOCIO', data.c_socio],
+                ['NOMBRES DE SERVICIO', data.servicio],
+                ['CODIGO DE SERVICIO', data.codigo_serv],
+                ['MONTO PAGADO', 's./ ' + data.monto],
+                ['N° DE CUOTA', data.n_cuota],
+              ]
+            },
+          },
+          {
+            text: [
+              { text: '\n\n', alignment: 'center' },
+              { text: '____________________________\n', alignment: 'center' },
+              { text: 'Firma y sello ', alignment: 'center' }
+            ]
+          }
         ],
         styles: {
           header: {
             fontSize: 18,
             bold: true,
+            margin: [0, 0, 0, 10]
           },
           subheader: {
-            fontSize: 14,
+            fontSize: 16,
             bold: true,
-            margin: [0, 15, 0, 0]
+            margin: [0, 10, 0, 5]
           },
-          story: {
-            italic: true,
-            alignment: 'center',
-            width: '50%',
+          tableExample: {
+            margin: [10, 10, 10, 10]
           }
+        },
+        defaultStyle: {
+          alignment: 'justify'
         }
       };
       this.pdfObj = pdfMake.createPdf(docDefinition);
@@ -446,49 +466,72 @@ export class PagarComponent implements OnInit {
     }));
   }
 
-  actualizar() {
+  actualizar(id) {
     Swal.fire({
       allowOutsideClick: false,
       type: 'info',
       text: 'Espere por favor...'
     });
     Swal.showLoading();
-    const id = $('#id_convenio').val();
-    const id_usuario = $('#id_socio').val();
     const cuota = [];
-    $('[name="cuota[]"]:checked').each(function () {
-      cuota.push($(this).val());
-    });
-    const dataString = 'id=' + id
-      + '&cuota=' + cuota
-      + '&id_usuario=' + id_usuario;
-    console.log(cuota.length);
-    if (cuota.length === 0) {
-      Swal.close();
-      $('#ModalConvenio').modal('hide');
-    } else {
-      this.crearC.PagarConvenioId(dataString).subscribe((data) => {
-        Swal.close();
-        console.log(data);
-        if (data === true) {
-          this.getConvenio();
-          $('#ModalConvenio').modal('hide');
-          Swal.fire(
-            'Pagado',
-            'Se registro correctamente el pago de servicio',
-            'success'
-          );
-          console.log('true');
-        } else {
-          Swal.fire({
-            type: 'warning',
-            title: 'Error',
-            text: 'Hubo un problema al registrarlo el pago de servicio',
-          });
-          console.log('false');
-        }
+    const cuotas = [];
+    const dataString = 'id=' + id;
+    let ultima_cuota = [];
+    this.crearC.getCuotaPagadas(dataString).subscribe((data => {
+      console.log(data);
+      $('[name="cuota[]"]:checked').each(function () {
+        cuota.push($(this).val());
+        cuotas.push($(this).val());
       });
-    }
+      ultima_cuota = cuotas.pop();
+      if (data[0].id_detalle === ultima_cuota[0]) {
+        const id = $('#id_convenio').val();
+        const id_usuario = $('#id_socio').val();
+        const dataString = 'id=' + id
+          + '&cuota=' + cuota
+          + '&id_usuario=' + id_usuario;
+        console.log(cuota.length);
+        if (cuota.length === 0) {
+          Swal.close();
+          $('#ModalConvenio').modal('hide');
+        } else {
+          this.crearC.PagarConvenioId(dataString).subscribe((data) => {
+            Swal.close();
+            console.log(data);
+            if (data === true) {
+              this.getConvenio();
+              $('#ModalConvenio').modal('hide');
+              Swal.fire(
+                'Pagado',
+                'Se registro correctamente el pago de servicio',
+                'success'
+              );
+              console.log('true');
+            } else {
+              Swal.fire({
+                type: 'warning',
+                title: 'Error',
+                text: 'Hubo un problema al registrarlo el pago de servicio',
+              });
+              console.log('false');
+            }
+          });
+        }
+      } else {
+        Swal.close();
+        console.log('Todo bien: ');
+        console.log(data[0].id_detalle);
+        console.log(ultima_cuota[0]);
+        Swal.fire({
+          type: 'warning',
+          title: 'Error',
+          text: 'Seleccione una cuota valida',
+        });
+        console.log('Todo mal: ');
+        console.log(data[0].id_detalle);
+        console.log(ultima_cuota[0]);
+      }
+    }));
   }
 
 

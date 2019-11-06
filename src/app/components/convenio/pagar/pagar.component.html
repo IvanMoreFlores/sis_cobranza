@@ -293,11 +293,11 @@
                                                 <td>
                                                     <div class="btn-group">
                                                         <button *ngIf="detalle.id_estado === '8'" class="btn"><i
-                                                                        class="fa fa-eye-slash"></i>
-                                                                </button>
+                                                                class="fa fa-eye-slash"></i>
+                                                        </button>
                                                         <button (click)="getImprimir(detalle.id_detalle)" *ngIf="detalle.id_estado !== '8'" class="btn"><i
-                                                                        class="fa fa-print"></i>
-                                                                </button>
+                                                                class="fa fa-print"></i>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -311,7 +311,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger " data-dismiss="modal">CANCELAR</button>
                     <button *ngIf="!estado" id="boton_multiuso" (click)="agregarConvenio()" type="button" class="btn btn-success">REGISTRAR</button>
-                    <button *ngIf="estado" id="boton_multiuso" (click)="actualizar()" type="button" class="btn btn-success">PAGAR</button>
+                    <button *ngIf="estado" id="boton_multiuso" (click)="actualizar(detalle.id_convenio)" type="button" class="btn btn-success">PAGAR</button>
                 </div>
             </div>
         </div>
