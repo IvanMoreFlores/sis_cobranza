@@ -10,8 +10,8 @@ import Swal from 'sweetalert2';
 export class ConfigComponent implements OnInit {
 
   usuario: any;
-  contra: String;
-  cofircontra: String;
+  contra: String = null;
+  cofircontra: String = null;
 
   constructor(private loginServi: LoginService) { }
 
@@ -23,9 +23,14 @@ export class ConfigComponent implements OnInit {
   }
 
   btnUpdate() {
-
-    if (this.contra === '' || this.cofircontra === '') {
-      alert('Complete los campos');
+    console.log(this.contra);
+    console.log(this.cofircontra);
+    if (this.contra === '' || this.cofircontra === '' || this.contra === null || this.cofircontra === null) {
+      Swal.fire({
+        type: 'error',
+        title: 'Mensaje',
+        text: 'Complete los campos'
+      });
     } else {
       Swal.fire({
         allowOutsideClick: false,

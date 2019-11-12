@@ -177,7 +177,11 @@
                                         <div class="col-md-12">
                                             <input type="hidden" id="id_servicio">
                                             <input type="hidden" id="id_dias">
-                                            <input (keyup)="buscarServicio($event)" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control autocomplete border" id="buscarServicioId" type="text">
+                                            <select (change)="onChange($event.target.value)" class="form-control border" name="buscarServicioId" id="buscarServicioId">
+                                                <option value="" selected disabled>.: SELECCIONE :.</option>
+                                                <option *ngFor="let item of servicios"  [value]="item.id_servicio">{{ item.nombre }}</option>
+                                            </select>
+                                            <!-- <input (keyup)="buscarServicio($event)" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control autocomplete border" id="buscarServicioId" type="text"> -->
                                             <span class="help-block"></span>
                                         </div>
                                     </div>

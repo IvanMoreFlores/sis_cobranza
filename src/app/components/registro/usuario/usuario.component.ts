@@ -31,17 +31,17 @@ export class UsuarioComponent implements OnInit {
   data: any = [];
   formularioUsuario: FormGroup;
   constructor(private userServ: UsuarioService,
-    private loginServ: LoginService,
-    public fb: FormBuilder) {
+              private loginServ: LoginService,
+              public fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       codigo: ['', [Validators.required]],
       id_rol: ['', [Validators.required]],
       id_documento: ['', [Validators.required]],
       numero_doc: ['', [Validators.required, Validators.pattern(/^[0-9]\d{7,12}$/)]],
       id_sexo: ['', [Validators.required]],
-      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
-      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
-      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      nombres: ['', [Validators.required, Validators.pattern(/^[a-zA-Z-ñÑ-áéiou]/)]],
+      apellido_pat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z-ñÑ-áéiou]/)]],
+      apellido_mat: ['', [Validators.required, Validators.pattern(/^[a-zA-Z-ñÑ-áéiou]/)]],
       user: ['', [Validators.required]],
       password: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.email]],
@@ -49,10 +49,12 @@ export class UsuarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
       // Button PDF
+      $('th').removeClass('sorting');
+      $('th').removeClass('sorting_asc');
     });
     this.listarUser();
   }
@@ -108,6 +110,8 @@ export class UsuarioComponent implements OnInit {
       Swal.close();
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
+      $('th').removeClass('sorting');
+      $('th').removeClass('sorting_asc');
     }));
   }
 
@@ -167,6 +171,10 @@ export class UsuarioComponent implements OnInit {
     $('#user').val('');
     $('#password').val('');
     $('#correo').val('');
+    this.formularioUsuario.controls.user.setValue('');
+    this.formularioUsuario.controls.nombres.setValue('');
+    this.formularioUsuario.controls.apellido_pat.setValue('');
+    this.formularioUsuario.controls.apellido_mat.setValue('');
   }
 
 
@@ -366,7 +374,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   exportarExcel() {
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     /* save to file */

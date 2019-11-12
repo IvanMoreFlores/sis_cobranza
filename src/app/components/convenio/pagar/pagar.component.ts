@@ -53,6 +53,8 @@ export class PagarComponent implements OnInit {
   getConvenio() {
     this.crearC.getConvenio().subscribe((data => {
       this.convenios = data;
+      $('th').removeClass('sorting');
+      $('th').removeClass('sorting_asc');
     }));
   }
 
@@ -483,7 +485,12 @@ export class PagarComponent implements OnInit {
         cuota.push($(this).val());
         cuotas.push($(this).val());
       });
-      ultima_cuota = cuotas.pop();
+      // ultima_cuota = cuotas.pop();
+      console.log(cuotas);
+      console.log(cuotas.length);
+      cuotas.length > 1 ? ultima_cuota = cuotas.pop() : ultima_cuota = cuotas;
+      console.log(cuotas);
+      console.log(cuotas.length);
       if (data[0].id_detalle === ultima_cuota[0]) {
         const id = $('#id_convenio').val();
         const id_usuario = $('#id_socio').val();
@@ -519,9 +526,6 @@ export class PagarComponent implements OnInit {
         }
       } else {
         Swal.close();
-        console.log('Todo bien: ');
-        console.log(data[0].id_detalle);
-        console.log(ultima_cuota[0]);
         Swal.fire({
           type: 'warning',
           title: 'Error',
@@ -530,6 +534,7 @@ export class PagarComponent implements OnInit {
         console.log('Todo mal: ');
         console.log(data[0].id_detalle);
         console.log(ultima_cuota[0]);
+        console.log(cuotas);
       }
     }));
   }

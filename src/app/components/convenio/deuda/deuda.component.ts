@@ -50,6 +50,8 @@ export class DeudaComponent implements OnInit {
   getConvenio() {
     this.crearC.getMora().subscribe((data => {
       this.convenios = data;
+      $('th').removeClass('sorting');
+      $('th').removeClass('sorting_asc');
     }));
   }
 
@@ -469,24 +471,38 @@ export class DeudaComponent implements OnInit {
 
   enviarCorreo() {
     Swal.fire({
-      timer: 3000,
       allowOutsideClick: false,
       type: 'info',
       text: 'Espere por favor...'
-    }).then((data) => {
+    });
+    Swal.showLoading();
+    const dataString = 'correo=' + $('#correo').val()
+      + '&fecha_pago=' + $('#fecha_pago').val()
+      + '&monto_pago=' + $('#monto_pago').val();
+    this.crearC.sendEmail(dataString).subscribe((data) => {
+      Swal.close();
       Swal.fire(
         'Enviado',
         'Se notifico correctamente al socio sobre su deuda',
-        'success'
-      );
-      $('#deuda').modal('hide');
-    });
-    Swal.showLoading();
+        'success');
+    },
+      (err: any) => {
+        Swal.close();
+        Swal.fire(
+          'No enviado',
+          'No se pudo notificar correctamente al socio sobre su deuda',
+          'warning');
+      },
+    );
   }
 
 
-  btnDeuda(id) {
+  btnDeuda(convenio) {
+    console.log(convenio);
+    const id = convenio.id_convenio;
     $('#correo').val('');
+    $('#fecha_pago').val(convenio.fecha);
+    $('#monto_pago').val(convenio.monto);
     // alert(id);
     $('#deuda').modal('show');
     this.crearC.getConvenioId({ id }).subscribe((data => {

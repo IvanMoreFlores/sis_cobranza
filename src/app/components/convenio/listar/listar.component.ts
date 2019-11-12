@@ -9,11 +9,11 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
 @Component({
-  selector: 'app-crear',
-  templateUrl: './crear.component.html',
-  styleUrls: ['./crear.component.scss']
+  selector: 'app-listar',
+  templateUrl: './listar.component.html',
+  styleUrls: ['./listar.component.scss']
 })
-export class CrearComponent implements OnInit {
+export class ListarComponent implements OnInit {
   @ViewChild('TABLE', { static: false }) table: ElementRef;
   userData: any[] = [];
   userList1: any;
@@ -38,7 +38,7 @@ export class CrearComponent implements OnInit {
       text: 'Espere por favor...'
     });
     Swal.showLoading();
-    this.crearC.getConvenio().subscribe((data => {
+    this.crearC.getConvenioSocioId({ id: localStorage.getItem('id') }).subscribe((data => {
       this.convenios = data;
       this.data = data;
       Swal.close();
@@ -46,13 +46,12 @@ export class CrearComponent implements OnInit {
   }
 
   getConvenio() {
-    this.crearC.getConvenio().subscribe((data => {
+    this.crearC.getConvenioSocioId({ id: localStorage.getItem('id') }).subscribe((data => {
       this.convenios = data;
       $('th').removeClass('sorting');
       $('th').removeClass('sorting_asc');
     }));
   }
-
 
   ngOnInit() {
     this.usuarios = [];
@@ -186,25 +185,6 @@ export class CrearComponent implements OnInit {
       }
     }
     return matches;
-  }
-
-  onChange(deviceValue) {
-    Swal.fire({
-      allowOutsideClick: false,
-      type: 'info',
-      text: 'Espere por favor...'
-    });
-    Swal.showLoading();
-    console.log(deviceValue);
-    this.servServ.getServicioId({ id: deviceValue }).subscribe((data => {
-      console.log(data);
-      $('#servicio').val(data[0].codigo);
-      $('#periodo').val(data[0].periodo);
-      $('#id_servicio').val(data[0].id_servicio);
-      $('#monto').val(data[0].monto);
-      $('#id_dias').val(data[0].dias);
-      Swal.close();
-    }));
   }
 
   buscarServicio($event) {

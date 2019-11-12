@@ -194,7 +194,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="nombres" required class="form-control" formControlName="nombres" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="nombres" required class="form-control" formControlName="nombres" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('nombres').errors && formularioUsuario.get('nombres').dirty">
@@ -218,7 +218,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="apellido_pat" required class="form-control" formControlName="apellido_pat" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="apellido_pat" required class="form-control" formControlName="apellido_pat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_pat').errors && formularioUsuario.get('apellido_pat').dirty">
@@ -240,7 +240,7 @@
                                             <label style="width: 100%" class="control-label col-md-6">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="apellido_mat" required class="form-control" formControlName="apellido_mat" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="apellido_mat" required class="form-control" formControlName="apellido_mat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_mat').errors && formularioUsuario.get('apellido_mat').dirty">

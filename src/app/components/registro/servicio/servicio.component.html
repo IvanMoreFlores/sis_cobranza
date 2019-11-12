@@ -102,7 +102,27 @@
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
+                <div>
+                    <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -134,7 +154,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Servicio</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="nombre" id="nombre" type="text"> <span class="help-block"></span>
+                                                <input (keypress)="soloLetras($event)" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="nombre" id="nombre" type="text"> <span class="help-block"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +192,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Monto</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="monto" required class="form-control" formControlName="monto" type="text">
+                                                <input maxlength="5" fullWidth style="text-transform: uppercase" placeholder="" id="monto" required class="form-control" formControlName="monto" type="text">
                                                 <span class="help-block"></span>
                                                 <div *ngIf="formularioUsuario.get('monto').errors && formularioUsuario.get('monto').dirty">
                                                     <div style="color: red !important" position="stacked" ion-text *ngIf="formularioUsuario.get('monto').hasError('required')">

@@ -22,7 +22,22 @@ export class CrearCService {
   apigetHistorial: string = this.ip + 'getHistorial';
   apigetImprimir: string = this.ip + 'getImprimir';
   apigetCuotaPagadas: string = this.ip + 'getCuotaPagadas';
+  apigetValidar: string = this.ip + 'getValidar';
+  apigetConvenioSocioId: string = this.ip + 'getConvenioSocioId';
+  apisendEmail: string = this.ip + 'sendEmail';
   constructor(public http: HttpClient) { }
+
+  sendEmail(dato): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apisendEmail, dato, httpOptions)
+      .pipe(map(results => results));
+  }
 
   getConvenio(): Observable<any> {
     const httpOptions = {
@@ -33,6 +48,18 @@ export class CrearCService {
     };
     return this.http
       .get(this.apigetConvenio, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getConvenioSocioId(dato): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetConvenioSocioId, dato, httpOptions)
       .pipe(map(results => results));
   }
 
@@ -165,6 +192,18 @@ export class CrearCService {
     };
     return this.http
       .post(this.apigetCuotaPagadas, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  getValidar(dato): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetValidar, dato, httpOptions)
       .pipe(map(results => results));
   }
 }

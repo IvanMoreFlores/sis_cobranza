@@ -1,3 +1,4 @@
+import { ListarComponent } from './components/convenio/listar/listar.component';
 import { IndicadorDosComponent } from './components/estadistica/indicador-dos/indicador-dos.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'ind_uno', component: IndicadorUnoComponent, canActivate: [AuthGuard] },
   { path: 'ind_dos', component: IndicadorDosComponent, canActivate: [AuthGuard] },
   { path: 'config', component: ConfigComponent, canActivate: [AuthGuard] },
+  { path: 'listar', component: ListarComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

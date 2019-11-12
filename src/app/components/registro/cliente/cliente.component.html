@@ -45,7 +45,8 @@
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
-                                <button (click)="exportarPdf()" id="btn_pdf" class="btn btn-danger btn-block">Descargar PDF</button>
+                                <button (click)="exportarPdf()" id="btn_pdf" class="btn btn-danger btn-block">Descargar
+                                    PDF</button>
                             </div>
                         </div>
                         <div class="col-md-4 ml-auto">
@@ -174,15 +175,18 @@
                                             <div class="col-md-12">
                                                 <input (keydown)="soloNumeros($event)" fullWidth style="text-transform: uppercase" placeholder="" id="numero_doc" required class="form-control" formControlName="numero_doc" maxlength="12" type="text">
                                                 <span class="help-block">
-                                                    <div *ngIf="formularioUsuario.get('numero_doc').errors && formularioUsuario.get('numero_doc').dirty">
-                                                        <div style="color: red !important" position="stacked" ion-text *ngIf="formularioUsuario.get('numero_doc').hasError('required')">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('numero_doc').errors && formularioUsuario.get('numero_doc').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('numero_doc').hasError('required')">
                                                             Se requiere Numero de documento
                                                         </div>
-                                                        <div style="color: red !important" position="stacked" ion-text *ngIf="formularioUsuario.get('numero_doc').hasError('pattern')">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('numero_doc').hasError('pattern')">
                                                             Solo numeros, entre 8 a 12 digitos
                                                         </div>
                                                     </div>
-                                                    </span>
+                                                </span>
                                             </div>
 
                                         </div>
@@ -208,7 +212,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Nombres</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="nombres" required class="form-control" formControlName="nombres" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" id="nombres" required class="form-control" formControlName="nombres" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('nombres').errors && formularioUsuario.get('nombres').dirty">
@@ -229,7 +233,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 paterno</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="apellido_pat" id="apellido_pat" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="apellido_pat" id="apellido_pat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_pat').errors && formularioUsuario.get('apellido_pat').dirty">
@@ -251,7 +255,7 @@
                                             <label style="width: 100%" class="control-label col-md-12">Apellido
                                                 materno</label>
                                             <div class="col-md-12">
-                                                <input (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="apellido_mat" id="apellido_mat" type="text">
+                                                <input (keydown)="obtenerUser()" (keypress)="soloLetras($event)" maxlength="15" fullWidth style="text-transform: uppercase" placeholder="" required class="form-control" formControlName="apellido_mat" id="apellido_mat" type="text">
                                                 <span class="help-block">
                                                     <div
                                                         *ngIf="formularioUsuario.get('apellido_mat').errors && formularioUsuario.get('apellido_mat').dirty">
@@ -277,6 +281,17 @@
                                             <div class="col-md-12">
                                                 <input class="form-control" style="text-transform: uppercase" id="correo" required type="text" fullWidth formControlName="correo" placeholder="">
                                                 <span class="help-block">
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('correo').errors && formularioUsuario.get('correo').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('correo').hasError('required')">
+                                                            Se requiere Correo
+                                                        </div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('correo').hasError('email')">
+                                                            Ingrese un correo valido
+                                                        </div>
+                                                    </div>
                                                 </span>
                                             </div>
                                         </div>

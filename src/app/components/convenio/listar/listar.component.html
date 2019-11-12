@@ -3,7 +3,7 @@
     <section class="content animated fadeIn fast">
         <div class="card content animated fadeIn">
             <div class="card-header bg-primary text-white">
-                <h4>Socios con deuda</h4>
+                <h4>Crear convenio</h4>
             </div>
             <div class="card-body">
                 <div class="container-fluid">
@@ -40,10 +40,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4 ml-auto">
-                            <div class="form-group">
-                                <!-- <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
-                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button> -->
-                            </div>
+                            <!-- <div class="form-group">
+                                <button (click)="btnAgregar()" id="openModalButton" data-toggle="modal"
+                                    data-target="#myModal" class="btn btn-primary btn-block">Nuevo convenio</button>
+                            </div> -->
                         </div>
                         <div class="col-md-4 ml-auto">
                             <div class="form-group">
@@ -73,7 +73,7 @@
                             <th class="text-center" width="10%">Código</th>
                             <th class="text-center" width="20%">Socio</th>
                             <th class="text-center" width="10%">Servicio</th>
-                            <th class="text-center" width="10%">N° de cuota</th>
+                            <th class="text-center" width="10%">Periodo</th>
                             <th class="text-center" width="8%">Monto</th>
                             <th class="text-center" width="8%">Estado</th>
                             <th class="text-center" width="8%">Acción</th>
@@ -85,17 +85,19 @@
                             <td>{{ convenio.codigo }}</td>
                             <td>{{ convenio.socio }}</td>
                             <td>{{ convenio.servicio }}</td>
-                            <td>{{ convenio.n_cuota }}</td>
+                            <td>{{ convenio.periodo }}</td>
                             <td>S/. {{ convenio.monto }}</td>
                             <td>
                                 <div class="form-group">
-                                    <span class="badge badge-danger">VENCIDO</span>
+                                    <span *ngIf="convenio.id_estado === '4'" class="badge badge-primary">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '5'" class="badge badge-danger">{{ convenio.estado }}</span>
+                                    <span *ngIf="convenio.id_estado === '6'" class="badge badge-success">{{ convenio.estado }}</span>
                                 </div>
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <button (click)="btnDeuda(convenio)" class="btn"><i
-                                            class="fa fa-bullhorn fa-2x"></i>
+                                    <button (click)="btnHistorial(convenio.id_convenio)" class="btn"><i
+                                            class="fa fa-hourglass-half fa-2x"></i>
                                     </button>
                                 </div>
                             </td>
@@ -105,28 +107,16 @@
             </div>
         </div>
     </section>
-    <div class="modal fade" id="deuda" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="historial" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="card text-center">
-                    <div class="card-header">
-                        Enviar notificación
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Ingrese el correo del socio</h5>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">@</span>
-                            </div>
-                            <input type="hidden" id="fecha_pago">
-                            <input type="hidden" id="monto_pago">
-                            <input id="correo" readonly type="text" class="form-control" placeholder="Correo electronico" aria-label="Username" aria-describedby="basic-addon1">
-                        </div>
-                        <a (click)="enviarCorreo()" class="btn btn-success">Enviar correo</a>
-                    </div>
-                    <div class="card-footer text-muted">
-                        Cuota vencida
-                    </div>
+                <div class="modal-header bg-primary" style="color: white;font-weight: bold;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 id="cabecera" class="modal-title text-center"></h3>
+                </div>
+                <div class="modal-body" align="center" id="timeline">
                 </div>
             </div>
         </div>

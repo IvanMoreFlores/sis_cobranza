@@ -11,11 +11,13 @@ export class NavbarComponent implements OnInit {
 
   nombre: String;
   rol: String;
+  id_rol: String;
   constructor(private router: Router) { }
 
   ngOnInit() {
     this.nombre = localStorage.getItem('nombre');
     this.rol = localStorage.getItem('rol');
+    this.id_rol = localStorage.getItem('id_rol');
   }
 
   btnSalir() {

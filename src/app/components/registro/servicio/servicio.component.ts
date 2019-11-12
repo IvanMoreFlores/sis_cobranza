@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 import { LoginService } from '../../../services/login/login.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
 declare var $: any;
-import * as XLSX from 'xlsx';
-import * as jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 @Component({
   selector: 'app-servicio',
@@ -29,16 +29,20 @@ export class ServicioComponent implements OnInit {
   persons: any;
   data: any = [];
   formularioUsuario: FormGroup;
+  // pager object
+  pager: any = {};
+  // paged items
+  pagedItems: any[];
   constructor(private userServ: ServicioService,
     private loginServ: LoginService,
     public fb: FormBuilder) {
     this.formularioUsuario = this.fb.group({
       id_servicio: ['', []],
       codigo: ['', [Validators.required]],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]/)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z-ñÑ-áéiou]/)]],
       descripcion: ['', [Validators.required]],
       id_periodo: ['', [Validators.required]],
-      monto: ['', [Validators.required, Validators.pattern(/^[1-9]\d{1,4}$/)]],
+      monto: ['', [Validators.required, Validators.pattern(/^([0-9]+\.?[0-9]{0,2})$/)]],
       // user: ['', [Validators.required]],
     });
   }
@@ -63,10 +67,21 @@ export class ServicioComponent implements OnInit {
     this.userServ.getServicio().subscribe((data => {
       this.servicios = data;
       this.data = data;
+      this.setPage(1);
       Swal.close();
       $('#tabla_usuarios_filter').css('display', 'none');
       $('#tabla_usuarios_length').css('display', 'none');
+      $('th').removeClass('sorting');
+      $('th').removeClass('sorting_asc');
     }));
+  }
+
+
+  setPage(page: number) {
+    // get pager object from service
+    this.pager = this.getPager(this.servicios.length, page);
+    // get current page of items
+    this.pagedItems = this.servicios.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
   initializeItems() {
@@ -121,9 +136,6 @@ export class ServicioComponent implements OnInit {
 
   getCodigoService() {
     this.userServ.getCodigoServicio().subscribe((codigo) => {
-      console.log(codigo);
-      console.log(parseInt(codigo[0].total + 1));
-      console.log(parseInt(codigo[0].total));
       const cod = parseInt(codigo[0].total) + 1;
       const numeros = ('0000' + cod).substr(-6, 6);
       this.codigo = 'SERV' + numeros;
@@ -165,7 +177,7 @@ export class ServicioComponent implements OnInit {
     this.estado = true;
     this.cabecera = 'EDITAR SERVICIO #' + id;
     $('#myModal').modal('show');
-    await this.userServ.getServicioId({ id: id }).subscribe((data => {
+    await this.userServ.getServicioId({ id }).subscribe((data => {
       console.log(data);
       const user = data[0];
       this.formularioUsuario.controls.id_servicio.setValue(user.id_servicio);
@@ -225,7 +237,7 @@ export class ServicioComponent implements OnInit {
           text: 'Espere por favor...'
         });
         Swal.showLoading();
-        this.userServ.ServicioDelete({ id: id }).subscribe((data => {
+        this.userServ.ServicioDelete({ id }).subscribe((data => {
           Swal.close();
           if (data === true) {
             this.listarServicio();
@@ -247,7 +259,7 @@ export class ServicioComponent implements OnInit {
   }
 
   exportarExcel() {
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);//converts a DOM TABLE element to a worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     /* save to file */
@@ -259,4 +271,74 @@ export class ServicioComponent implements OnInit {
     doc.autoTable({ html: '#tabla_usuarios' });
     doc.save('table.pdf');
   }
+
+  soloLetras(e) {
+    const key = e.keyCode || e.which;
+    const tecla = String.fromCharCode(key).toLowerCase();
+    const letras = ' áéíóúabcdefghijklmnñopqrstuvwxyz';
+    const especiales: any = '8-37-39-46';
+    let tecla_especial = false;
+    for (const i in especiales) {
+      if (key === especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) === -1 && !tecla_especial) {
+      return false;
+    }
+  }
+
+  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 10) {
+    // calculate total pages
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    // ensure current page isn't out of range
+    if (currentPage < 1) {
+      currentPage = 1;
+    } else if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+    let startPage: number, endPage: number;
+    if (totalPages <= 10) {
+      // less than 10 total pages so show all
+      startPage = 1;
+      endPage = totalPages;
+    } else {
+      // more than 10 total pages so calculate start and end pages
+      if (currentPage <= 6) {
+        startPage = 1;
+        endPage = 10;
+      } else if (currentPage + 4 >= totalPages) {
+        startPage = totalPages - 9;
+        endPage = totalPages;
+      } else {
+        startPage = currentPage - 5;
+        endPage = currentPage + 4;
+      }
+    }
+
+    // calculate start and end item indexes
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+    // create an array of pages to ng-repeat in the pager control
+    const pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
+
+    // return object with all pager properties required by the view
+    return {
+      totalItems,
+      currentPage,
+      pageSize,
+      totalPages,
+      startPage,
+      endPage,
+      startIndex,
+      endIndex,
+      pages
+    };
+  }
 }
+
+

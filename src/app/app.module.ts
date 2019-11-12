@@ -24,6 +24,7 @@ import { PagarComponent } from './components/convenio/pagar/pagar.component';
 import { DeudaComponent } from './components/convenio/deuda/deuda.component';
 import { IndicadorUnoComponent } from './components/estadistica/indicador-uno/indicador-uno.component';
 import { IndicadorDosComponent } from './components/estadistica/indicador-dos/indicador-dos.component';
+import { ListarComponent } from './components/convenio/listar/listar.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { IndicadorDosComponent } from './components/estadistica/indicador-dos/in
     PagarComponent,
     DeudaComponent,
     IndicadorUnoComponent,
-    IndicadorDosComponent
+    IndicadorDosComponent,
+    ListarComponent
   ],
   imports: [
     BrowserModule,
