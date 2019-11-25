@@ -436,7 +436,7 @@ export class CrearComponent implements OnInit {
       $('#puesto').val(user.puesto);
       $('#id_servicio').val(user.id_servicio);
       $('#id_dias').val(user.dias);
-      $('#buscarServicioId').val(user.servicio);
+      $('#buscarServicioId').val(user.id_servicio);
       $('#servicio').val(user.codigo_serv);
       $('#monto').val(user.monto);
       $('#periodo').val(user.periodo);

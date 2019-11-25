@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { ClienteService } from '../../../services/cliente/cliente.service';
 import { CrearCService } from '../../../services/crear_c/crear-c.service';
 import { ServicioService } from '../../../services/servicio/servicio.service';
+import * as moment from 'moment';
 declare var $: any;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -487,10 +488,10 @@ export class PagarComponent implements OnInit {
       });
       // ultima_cuota = cuotas.pop();
       console.log('Cuotas', cuotas);
-      console.log('Total de cuotas',cuotas.length);
+      console.log('Total de cuotas', cuotas.length);
       cuotas.length > 1 ? ultima_cuota = cuotas.pop() : ultima_cuota = cuotas[0];
-      console.log('ultima_cuota',ultima_cuota);
-      console.log('data[0].id_detalle',data[0].id_detalle);
+      console.log('ultima_cuota', ultima_cuota);
+      console.log('data[0].id_detalle', data[0].id_detalle);
       console.log(data[0].id_detalle === ultima_cuota[0]);
       if (data[0].id_detalle === ultima_cuota) {
         const id = $('#id_convenio').val();
@@ -563,6 +564,64 @@ export class PagarComponent implements OnInit {
     const doc = new jsPDF();
     doc.autoTable({ html: '#tabla_usuarios' });
     doc.save('table.pdf');
+  }
+
+  enviarNoti(convenio) {
+    const option = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    console.log(convenio);
+    console.log(convenio.fecha);
+    console.log((new Date().toLocaleDateString('ja-JP', option)).split('/').join('-'));
+    const id = convenio.id_convenio;
+    const fecha1 = moment(convenio.fecha);
+    const fecha2 = moment((new Date().toLocaleDateString('ja-JP', option)).split('/').join('-'));
+    const dias = fecha1.diff(fecha2, 'days');
+    if (dias === 5 || dias === -5) {
+      console.log(fecha1.diff(fecha2, 'days'), ' dias de diferencia');
+      $('#correo').val('');
+      $('#fecha_pago').val(convenio.fecha);
+      $('#monto_pago').val(convenio.monto);
+      // alert(id);
+      $('#deuda').modal('show');
+      this.crearC.getConvenioId({ id }).subscribe((data => {
+        console.log(data);
+        const user = data[0];
+        $('#correo').val(user.correo);
+      }));
+    } else {
+      Swal.fire(
+        'Notificación',
+        'Es muy pronto para notifcar',
+        'warning');
+    }
+  }
+
+  enviarCorreo() {
+    Swal.fire({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
+    const dataString = 'correo=' + $('#correo').val()
+      + '&fecha_pago=' + $('#fecha_pago').val()
+      + '&monto_pago=' + $('#monto_pago').val();
+    this.crearC.sendEmail(dataString).subscribe((data) => {
+      $('#deuda').modal('hide');
+      Swal.close();
+      Swal.fire(
+        'Enviado',
+        'Se notifico correctamente al socio sobre su deuda',
+        'success');
+    },
+      (err: any) => {
+        $('#deuda').modal('hide');
+        Swal.close();
+        Swal.fire(
+          'No enviado',
+          'No se pudo notificar correctamente al socio sobre su deuda',
+          'warning');
+      },
+    );
   }
 
 

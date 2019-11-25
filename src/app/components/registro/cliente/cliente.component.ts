@@ -198,7 +198,7 @@ export class ClienteComponent implements OnInit {
     });
     Swal.showLoading();
     // console.log(this.formularioUsuario.value);
-    this.loginServ.countUser({ user: this.formularioUsuario.value.user, dni: this.formularioUsuario.value.numero_doc }).subscribe((data => {
+    this.loginServ.countCiente({ user: this.formularioUsuario.value.user, dni: this.formularioUsuario.value.numero_doc, puesto: this.formularioUsuario.value.puesto }).subscribe((data => {
       if (data[0].total === '0') {
         this.userServ.createCliente(this.formularioUsuario.value).subscribe((data) => {
           Swal.close();

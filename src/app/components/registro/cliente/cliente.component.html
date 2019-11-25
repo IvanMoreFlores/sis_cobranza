@@ -146,7 +146,7 @@
                                         <div class="form-group">
                                             <label style="width: 100%" class="control-label col-md-6">Puesto</label>
                                             <div class="col-md-12">
-                                                <input fullWidth style="text-transform: uppercase" placeholder="" id="puesto" required class="form-control" formControlName="puesto" type="text">
+                                                <input maxlength="4" (keydown)="soloNumeros($event)" fullWidth style="text-transform: uppercase" placeholder="" id="puesto" required class="form-control" formControlName="puesto" type="text">
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>

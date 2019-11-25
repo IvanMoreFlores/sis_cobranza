@@ -33,6 +33,7 @@
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.2.10",
     "jszip": "^3.2.2",
+    "moment": "^2.24.0",
     "pdf-maker": "0.0.2",
     "pdfmake": "^0.1.62",
     "popper.js": "^1.15.0",

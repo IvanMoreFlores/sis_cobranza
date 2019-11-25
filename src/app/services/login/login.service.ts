@@ -15,6 +15,7 @@ export class LoginService {
   apigetCliente: string = this.ip + 'getCliente';
   apigetUserUpdate: string = this.ip + 'UserUpdate';
   apigetCountUser: string = this.ip + 'CountUser';
+  apigetcountCiente: string = this.ip + 'countCiente';
   constructor(public http: HttpClient) { }
 
   Login(dato: any): Observable<any> {
@@ -26,6 +27,18 @@ export class LoginService {
     };
     return this.http
       .post(this.apiLogin, dato, httpOptions)
+      .pipe(map(results => results));
+  }
+
+  countCiente(dato: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      }),
+    };
+    return this.http
+      .post(this.apigetcountCiente, dato, httpOptions)
       .pipe(map(results => results));
   }
 

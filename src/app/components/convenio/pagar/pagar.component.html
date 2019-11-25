@@ -292,8 +292,8 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <button *ngIf="detalle.id_estado === '8'" class="btn"><i
-                                                                class="fa fa-eye-slash"></i>
+                                                        <button (click)="enviarNoti(detalle)" *ngIf="detalle.id_estado === '8'" class="btn"><i
+                                                                class="fa fa-bullhorn"></i>
                                                         </button>
                                                         <button (click)="getImprimir(detalle.id_detalle)" *ngIf="detalle.id_estado !== '8'" class="btn"><i
                                                                 class="fa fa-print"></i>
@@ -327,6 +327,34 @@
                     <h3 id="cabecera" class="modal-title text-center"></h3>
                 </div>
                 <div class="modal-body" align="center" id="timeline">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deuda" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> Enviar notificación
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Correo del socio</h5>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">@</span>
+                            </div>
+                            <input type="hidden" id="fecha_pago">
+                            <input type="hidden" id="monto_pago">
+                            <input id="correo" readonly type="text" class="form-control" placeholder="Correo electronico" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                        <a (click)="enviarCorreo()" class="btn btn-success">Enviar correo</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Cuota por vencer en pocos dias
+                    </div>
                 </div>
             </div>
         </div>

@@ -480,6 +480,7 @@ export class DeudaComponent implements OnInit {
       + '&fecha_pago=' + $('#fecha_pago').val()
       + '&monto_pago=' + $('#monto_pago').val();
     this.crearC.sendEmail(dataString).subscribe((data) => {
+      $('#deuda').modal('hide');
       Swal.close();
       Swal.fire(
         'Enviado',
@@ -487,6 +488,7 @@ export class DeudaComponent implements OnInit {
         'success');
     },
       (err: any) => {
+        $('#deuda').modal('hide');
         Swal.close();
         Swal.fire(
           'No enviado',
