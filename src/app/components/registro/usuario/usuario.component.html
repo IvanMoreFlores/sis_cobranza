@@ -286,7 +286,18 @@
                                             <div class="col-md-12">
                                                 <input class="form-control" style="text-transform: uppercase" id="correo" required type="text" fullWidth formControlName="correo" placeholder="">
                                                 <span class="help-block">
-                                                    </span>
+                                                    <div
+                                                        *ngIf="formularioUsuario.get('correo').errors && formularioUsuario.get('correo').dirty">
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('correo').hasError('required')">
+                                                            Se requiere Correo
+                                                        </div>
+                                                        <div style="color: red !important" position="stacked" ion-text
+                                                            *ngIf="formularioUsuario.get('correo').hasError('email')">
+                                                            Ingrese un correo valido
+                                                        </div>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

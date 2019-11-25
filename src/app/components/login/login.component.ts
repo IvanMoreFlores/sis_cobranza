@@ -39,9 +39,9 @@ export class LoginComponent implements OnInit {
     Swal.showLoading();
     this.loginServi.Login(this.usuario)
       .subscribe(resp => {
-        console.log(resp.length);
-        if (resp.length > 0) {
-          const usuario = resp[0];
+        console.log(resp);
+        if (resp) {
+          const usuario = resp;
           localStorage.setItem('id', usuario.id_usuario);
           localStorage.setItem('nombre', usuario.nombre);
           localStorage.setItem('id_rol', usuario.id_rol);

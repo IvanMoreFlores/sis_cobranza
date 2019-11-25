@@ -486,12 +486,13 @@ export class PagarComponent implements OnInit {
         cuotas.push($(this).val());
       });
       // ultima_cuota = cuotas.pop();
-      console.log(cuotas);
-      console.log(cuotas.length);
-      cuotas.length > 1 ? ultima_cuota = cuotas.pop() : ultima_cuota = cuotas;
-      console.log(cuotas);
-      console.log(cuotas.length);
-      if (data[0].id_detalle === ultima_cuota[0]) {
+      console.log('Cuotas', cuotas);
+      console.log('Total de cuotas',cuotas.length);
+      cuotas.length > 1 ? ultima_cuota = cuotas.pop() : ultima_cuota = cuotas[0];
+      console.log('ultima_cuota',ultima_cuota);
+      console.log('data[0].id_detalle',data[0].id_detalle);
+      console.log(data[0].id_detalle === ultima_cuota[0]);
+      if (data[0].id_detalle === ultima_cuota) {
         const id = $('#id_convenio').val();
         const id_usuario = $('#id_socio').val();
         const dataString = 'id=' + id
